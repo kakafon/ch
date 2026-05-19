@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Minervini Screener — Norden</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<style>
+:root{--bg:#060b14;--bg2:#0d1520;--bg3:#0a1018;--bdr:#1a2535;--bdr2:#0d1a2d;--txt:#e2e8f0;--txt2:#94a3b8;--txt3:#475569;--txt4:#2d3f55;--acc:#3b82f6;--acc-bg:rgba(59,130,246,0.08);--inp:#0d1520;--inp-bdr:#1e3a5f;}
+body.light{--bg:#f8fafc;--bg2:#ffffff;--bg3:#f1f5f9;--bdr:#e2e8f0;--bdr2:#e2e8f0;--txt:#0f172a;--txt2:#334155;--txt3:#64748b;--txt4:#94a3b8;--acc:#2563eb;--acc-bg:rgba(37,99,235,0.07);--inp:#ffffff;--inp-bdr:#cbd5e1;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Mono',monospace;background:var(--bg);color:var(--txt);min-height:100vh;transition:background .2s,color .2s;font-size:13px;}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px;}
+input,textarea,select,button{font-family:inherit;font-size:13px;outline:none;}a{color:var(--acc);}
+.hdr{border-bottom:1px solid var(--bdr2);padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:10;}
+.hdr-title{font-size:19px;font-weight:700;color:var(--txt);letter-spacing:-.02em;}
+.hdr-sub{font-size:9px;color:var(--txt4);letter-spacing:.25em;margin-bottom:2px;}
+.main{padding:18px 22px;}
+.tab-bar{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--bdr2);padding-bottom:12px;flex-wrap:wrap;}
+.tab{background:transparent;border:1px solid var(--bdr);border-radius:6px;color:var(--txt3);padding:6px 14px;font-size:11px;cursor:pointer;transition:all .15s;}
+.tab.active{background:var(--acc);border-color:var(--acc);color:#fff;}
+.tab:hover:not(.active){border-color:var(--acc);color:var(--txt);}
+.info-box{background:var(--bg2);border:1px solid var(--inp-bdr);border-radius:8px;padding:14px;font-size:12px;color:var(--txt3);line-height:1.8;margin-bottom:14px;}
+.field-lbl{font-size:11px;color:var(--txt3);margin-bottom:4px;}
+input[type=text],input[type=url]{width:100%;background:var(--inp);border:1px solid var(--inp-bdr);border-radius:6px;color:var(--txt);padding:9px 12px;font-size:12px;margin-bottom:10px;transition:border-color .15s;}
+input[type=text]:focus,input[type=url]:focus{border-color:var(--acc);}
+textarea{width:100%;background:var(--inp);border:1px solid var(--inp-bdr);border-radius:8px;color:var(--txt);padding:10px;font-size:11px;resize:vertical;margin-bottom:10px;line-height:1.5;}
+textarea:focus{border-color:var(--acc);}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:6px;padding:9px 24px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.btn:disabled{opacity:.4;cursor:default;}.btn:hover:not(:disabled){opacity:.88;}
+.btn-ghost{background:transparent;border:1px solid var(--bdr);border-radius:5px;color:var(--txt3);padding:5px 12px;font-size:11px;cursor:pointer;transition:all .12s;}
+.btn-ghost:hover{border-color:var(--acc);color:var(--txt);}
+.btn-green{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:5px;color:#10b981;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;}
+.btn-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:5px;color:#f87171;padding:5px 10px;font-size:11px;cursor:pointer;}
+.ctrl-btn{background:transparent;border:1px solid var(--bdr);border-radius:5px;color:var(--txt3);padding:4px 10px;font-size:11px;cursor:pointer;transition:all .12s;}
+.ctrl-btn.on{background:var(--acc);border-color:var(--acc);color:#fff;}
+.ctrl-btn:hover:not(.on){border-color:var(--acc);color:var(--txt);}
+.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#f87171;}
+.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#22c55e;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:8px 12px;font-size:9px;color:var(--txt4);letter-spacing:.15em;text-transform:uppercase;font-weight:600;white-space:nowrap;border-bottom:1px solid var(--bdr2);}
+th.r{text-align:right;}th.c{text-align:center;}
+td{padding:9px 12px;border-bottom:1px solid var(--bdr2);vertical-align:middle;}
+tbody tr{cursor:pointer;transition:background .1s;}tbody tr:hover{background:rgba(59,130,246,.06)!important;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:26px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;}
+.sec-lbl{font-size:9px;color:var(--txt4);letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:7px;}
+.drow{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
+.dk{color:var(--txt3);}.dv{color:var(--txt2);font-variant-numeric:tabular-nums;}
+.badge{font-size:9px;padding:2px 5px;border-radius:3px;font-weight:700;display:inline-block;}
+.ring{position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;}
+.ring-in{width:32px;height:32px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr2);}
+.guide-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:12px;}
+.g-title{font-size:11px;font-weight:700;color:var(--acc);margin-bottom:5px;}
+.g-text{font-size:11px;color:var(--txt3);line-height:1.7;}
+.pos-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:14px;margin-bottom:10px;}
+.pos-ticker{font-size:16px;font-weight:700;color:var(--txt);}
+.pos-name{font-size:11px;color:var(--txt3);}
+.target-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr2);font-size:12px;}
+.target-row:last-child{border-bottom:none;}
+.tgt-hit{background:rgba(34,197,94,.15);border-radius:3px;padding:2px 6px;color:#22c55e;font-size:10px;font-weight:700;cursor:pointer;}
+.tgt-open{background:rgba(30,42,60,.5);border-radius:3px;padding:2px 6px;color:var(--txt3);font-size:10px;cursor:pointer;}
+.bors-bar{display:flex;gap:6px;margin-bottom:12px;align-items:center;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const {useState,useMemo,useCallback,useEffect,useRef}=React;
+const h=React.createElement;
+const LS={
+  get:(k,fb)=>{try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):fb;}catch{return fb;}},
+  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+};
+
+const EXCHANGES=[
+  {id:'OSL',navn:'Oslo',      flag:'🇳🇴',suffix:'.OL', tv:'OSLO',    valuta:'NOK'},
+  {id:'STO',navn:'Stockholm', flag:'🇸🇪',suffix:'.ST', tv:'OMXSTO',  valuta:'SEK'},
+  {id:'CPH',navn:'København', flag:'🇩🇰',suffix:'.CO', tv:'OMXCOP',  valuta:'DKK'},
+  {id:'HEL',navn:'Helsinki',  flag:'🇫🇮',suffix:'.HE', tv:'OMXHEX',  valuta:'EUR'},
+];
+
+const GLOSS=[
+  {t:'Trend Template (TT)',c:'Minervinis 8 tekniske krav. Aksjen må handles over MA50, MA150 og MA200. MA-ene må være sortert riktig (50>150>200). MA200 skal stige. Kursen skal være innen 25% av 52-ukers høy. RS-score ≥70. Jo flere krav (score 0-8), jo sterkere teknisk oppsett.'},
+  {t:'VCP — Volatility Contraction Pattern',c:'Minervinis viktigste mønster. Kursen konsoliderer i 3-4 faser med SYNKENDE volatilitet og SYNKENDE volum. F.eks: −20% → −12% → −7% → −4%. Hvert håndtak er smalere. Volumet tørker inn. Utbrudd skjer på høyt volum. Jo smalere siste kontraksjon, jo lavere risiko.'},
+  {t:'Pivot Point',c:'Den øverste motstandssonen i siste kontraksjon av et VCP-mønster. Entry er et brudd over dette nivået på klart høyere volum enn normalt (minst 40-50% over 50-dagers gjennomsnittsvolum). Kjøp IKKE under pivoten.'},
+  {t:'RS Score (Relativ Styrke)',c:'IBD-inspirert beregning. Sammenligner aksjes vektede avkastning siste 12 mnd mot nasjonal indeks. Score 1-99. Over 70 er bra, over 80 er sterkt. Minervini vil ha RS ≥70 FØR utbruddet. RS-linjen bør ideelt nå nye høyder før kursen gjør det.'},
+  {t:'Distribusjon',c:'Institusjonell salgsaktivitet. Kjennetegn: kursfall på HØYERE enn normalt volum, spesielt etter en oppgang. 3-5 distribusjonsdager på en indeks over 4-5 uker er bearish signal. På enkeltaksje: store røde staker med høyt volum etter oppgang = advarsel.'},
+  {t:'SEPA (Specific Entry Point Analysis)',c:'Minervinis rammeverk. Kombinerer: Trend (teknikk), Fundamentalt (EPS/Rev vekst >20%/15%, ROE >17%), Sentiment (institusjonell eierskap), og Katalysator (noe som kan drive kursen). Alle fire bør peke samme vei.'},
+  {t:'Stop-loss',c:'Festes 7-8% under inngangspris (eller under pivot-nivå). Flyttes ALDRI ned. Akseptér tapet og kom deg ut. Minervini: "Cut losses and let profits run." En stop er ikke feil — det er risikostyring.'},
+  {t:'Posisjonsstørrelse',c:'Maks 1-2% av total konto i risiko per trade. Formel: (Konto × 1%) ÷ (Inngang − Stop) = Antall aksjer. Med 100k konto og 1% risiko: 1000 kr risiko. Stop 8% under 100 kr inngang = 8 kr risiko/aksje → kjøp 125 aksjer.'},
+  {t:'2:1, 3:1, 4:1 Targets',c:'Risk/reward-mål. Hvis risiko er 8 kr per aksje er 2:1 = +16 kr, 3:1 = +24 kr, 4:1 = +32 kr over inngang. Minervini tar gjerne delvis gevinst ved 20-25% oppgang og lar resten løpe. Minste akseptable R/R er 3:1.'},
+  {t:'Trailing Stop',c:'Etter 20-25% oppgang: flytt stop til breakeven. Etter 30%+: bruk MA50 som trailing stop. La vinnerne løpe til teknisk brudd. Ikke selg for tidlig p.g.a. frykt — det er den vanligste feilen.'},
+];
+
+function parseRows(rows){
+  return rows.map(r=>{
+    const n=k=>{const v=parseFloat(String(r[k]||'').replace(/⚠/g,'').trim());return isNaN(v)?null:v;};
+    const s=k=>String(r[k]||'').trim();
+    const ticker=s('Ticker');if(!ticker||ticker.length<2)return null;
+    return{ticker,name:s('Navn'),price:n('Kurs'),high52:n('52w Høy'),low52:n('52w Lav'),
+      avgVol:n('Avg.Vol(50d)'),ma50:n('MA50'),ma150:n('MA150'),ma200:n('MA200'),
+      ttScore:n('TT Score (0-8)')||0,rsScore:n('RS Score (1-99)'),
+      niVekst:n('NI-vekst YoY %'),revVekst:n('Omsetn.vekst YoY %'),
+      roe:n('ROE %'),netMarg:n('Nettomarg. %'),
+      sepaEps:s('SEPA: NI≥20%'),sepaRev:s('SEPA: Rev≥15%'),
+      sepaRoe:s('SEPA: ROE≥17%'),sepaMarg:s('SEPA: Marg.↑'),
+      fundScore:n('Fund Score (0-4)')||0,total:n('Total Score (0-12)')||0,
+      updated:s('Oppdatert'),
+      tt:['TT1: Pris>MA50','TT2: Pris>MA150','TT3: Pris>MA200',
+          'TT4: MA50>MA150','TT5: MA150>MA200','TT6: MA200↑','TT7: ≤25% fra topp'].map(k=>s(k)),
+      vcpScore:(()=>{const v=n('VCP Score (0-10)');return(v!=null&&v>=0&&v<=10)?v:null;})(),
+      vcpDetaljer:s('VCP Detaljer'),
+    };
+  }).filter(Boolean);
+}
+
+function beregnPos(p,nyInngang){
+  const inn=nyInngang!=null?nyInngang:p.inngang;
+  const stop=+(inn*(1-p.sPst/100)).toFixed(2);
+  const antall=inn>0?Math.floor(p.riskKr/(inn-stop)):p.antall;
+  const totInv=+(antall*inn).toFixed(0);
+  return{...p,inngang:inn,stop,antall,totInv,
+    t2:+(inn*(1+p.sPst*2/100)).toFixed(2),
+    t3:+(inn*(1+p.sPst*3/100)).toFixed(2),
+    t4:+(inn*(1+p.sPst*4/100)).toFixed(2)};
+}
+
+function Kalkulator({aksje,onClose,onKjøpt}){
+  const [konto,setKonto]=useState(()=>LS.get('kalk_konto','100000'));
+  const [rPst,setRPst]=useState(()=>LS.get('kalk_risiko','1'));
+  const [sPst,setSPst]=useState(()=>LS.get('kalk_stop','8'));
+  const [dato,setDato]=useState(new Date().toISOString().split('T')[0]);
+  useEffect(()=>{LS.set('kalk_konto',konto);LS.set('kalk_risiko',rPst);LS.set('kalk_stop',sPst);},[konto,rPst,sPst]);
+  const kR=parseFloat(konto)||0,rP=parseFloat(rPst)||1,sP=parseFloat(sPst)||8;
+  const inn=aksje.price||0,stop=+(inn*(1-sP/100)).toFixed(2);
+  const riskKr=+(kR*(rP/100)).toFixed(0),antall=inn>0?Math.floor(riskKr/(inn-stop)):0;
+  const totInv=+(antall*inn).toFixed(0);
+  const t2=+(inn*(1+sP*2/100)).toFixed(2),t3=+(inn*(1+sP*3/100)).toFixed(2),t4=+(inn*(1+sP*4/100)).toFixed(2);
+  const fld=(lbl,val,set)=>h('div',{key:lbl,style:{marginBottom:10}},
+    h('div',{className:'field-lbl'},lbl),
+    h('input',{type:'text',value:val,onChange:e=>set(e.target.value),
+      style:{background:'var(--inp)',border:'1px solid var(--inp-bdr)',borderRadius:6,
+             color:'var(--txt)',padding:'8px 12px',width:'100%'}})
+  );
+  const row=(lbl,val,hi)=>h('div',{className:'drow',style:hi?{fontWeight:700}:{}},
+    h('span',{className:'dk'},lbl),h('span',{className:'dv',style:hi?{color:'#22c55e'}:{}},val)
+  );
+  const doKjøpt=()=>{
+    const pos={id:Date.now(),ticker:aksje.ticker,name:aksje.name,
+      inngang:inn,stop,antall,totInv,riskKr,rPst:rP,sPst:sP,dato,t2,t3,t4,
+      hitT2:false,hitT3:false,hitT4:false,hitStop:false};
+    LS.set('posisjoner',[...LS.get('posisjoner',[]),pos]);
+    onKjøpt&&onKjøpt();onClose();
+  };
+  return h('div',{className:'modal-bg',onClick:onClose},
+    h('div',{className:'modal',onClick:e=>e.stopPropagation()},
+      h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}},
+        h('div',null,h('div',{style:{fontSize:18,fontWeight:700,color:'var(--txt)'}},aksje.ticker),
+          h('div',{style:{fontSize:11,color:'var(--txt3)'}},aksje.name)),
+        h('button',{style:{background:'none',border:'none',color:'var(--txt3)',fontSize:22,cursor:'pointer'},onClick:onClose},'✕')
+      ),
+      fld('Kontobalanse',konto,setKonto),fld('Risiko (%)',rPst,setRPst),fld('Stop-loss (%)',sPst,setSPst),fld('Dato',dato,setDato),
+      h('div',{style:{background:'var(--bg3)',borderRadius:8,padding:14,marginBottom:14}},
+        row('Inngangskurs',inn.toFixed(2)),row('Stop-kurs',stop+' (−'+sP+'%)'),
+        row('Risiko',riskKr.toLocaleString('nb-NO')+' ('+rP+'%)'),
+        row('Antall aksjer',antall.toLocaleString('nb-NO')),
+        row('Total investering',totInv.toLocaleString('nb-NO')),
+        h('div',{style:{borderTop:'1px solid var(--bdr2)',margin:'8px 0'}}),
+        row('Target 2:1 (+'+(sP*2).toFixed(0)+'%)',t2.toFixed(2)),
+        row('Target 3:1 (+'+(sP*3).toFixed(0)+'%)',t3.toFixed(2)),
+        row('Target 4:1 (+'+(sP*4).toFixed(0)+'%)',t4.toFixed(2),true)
+      ),
+      h('div',{style:{display:'flex',gap:8}},
+        h('button',{className:'btn',style:{background:'#16a34a'},onClick:doKjøpt},'✓ Registrer kjøp'),
+        h('button',{className:'btn-ghost',onClick:onClose},'Avbryt')
+      )
+    )
+  );
+}
+
+function PosKort({p,onToggle,onFjern,onOppdater}){
+  const [red,setRed]=useState(false);
+  const [tmp,setTmp]=useState(String(p.inngang));
+  const lagre=()=>{const ny=parseFloat(tmp.replace(',','.'));if(!isNaN(ny)&&ny>0)onOppdater(p.id,ny);setRed(false);};
+  const cap=f=>f.charAt(0).toUpperCase()+f.slice(1);
+  return h('div',{className:'pos-card'},
+    h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}},
+      h('div',null,
+        h('span',{className:'pos-ticker'},p.ticker.replace(/\.(OL|ST|CO|HE)$/,''),' '),
+        h('span',{className:'pos-name'},p.name),
+        h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:2}},p.dato+' · '+p.antall+' aksjer · '+p.totInv.toLocaleString('nb-NO'))
+      ),
+      h('div',{style:{display:'flex',gap:6}},
+        h('button',{className:'btn-ghost',style:{fontSize:10,padding:'3px 8px'},onClick:()=>{setRed(!red);setTmp(String(p.inngang));}},red?'Avbryt':'✏️ Juster'),
+        h('button',{className:'btn-red',onClick:()=>onFjern(p.id)},'✕')
+      )
+    ),
+    red&&h('div',{style:{background:'var(--bg3)',borderRadius:6,padding:10,marginBottom:10,display:'flex',gap:8,alignItems:'center'}},
+      h('div',{style:{fontSize:11,color:'var(--txt3)',minWidth:110}},'Ny inngangskurs:'),
+      h('input',{type:'text',value:tmp,onChange:e=>setTmp(e.target.value),
+        onKeyDown:e=>e.key==='Enter'&&lagre(),
+        style:{width:100,background:'var(--inp)',border:'1px solid var(--inp-bdr)',borderRadius:5,color:'var(--txt)',padding:'5px 8px',fontSize:12}}),
+      h('button',{className:'btn',style:{padding:'5px 12px',fontSize:11},onClick:lagre},'Oppdater')
+    ),
+    h('div',{className:'target-row'},h('span',{style:{color:'var(--txt3)',minWidth:90,fontSize:11}},'Inngang'),h('span',{style:{fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},p.inngang.toFixed(2))),
+    h('div',{className:'target-row'},
+      h('span',{style:{color:'#f87171',minWidth:90,fontSize:11}},'Stop −'+p.sPst+'%'),
+      h('span',{style:{color:'#f87171',fontFamily:'monospace'}},p.stop.toFixed(2)),
+      h('span',{className:p.hitStop?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hitStop')},p.hitStop?'STOPET':'aktiv')
+    ),
+    [['t2','2:1'],['t3','3:1'],['t4','4:1']].map(([f,lbl])=>
+      h('div',{key:f,className:'target-row'},
+        h('span',{style:{color:'#22c55e',minWidth:90,fontSize:11}},'Target '+lbl),
+        h('span',{style:{color:'#22c55e',fontFamily:'monospace'}},p[f].toFixed(2)),
+        h('span',{className:p['hit'+cap(f)]?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hit'+cap(f))},p['hit'+cap(f)]?'✓ Nådd':'åpen')
+      )
+    )
+  );
+}
+
+function Posisjoner(){
+  const [pos,setPos]=useState(()=>LS.get('posisjoner',[]));
+  const toggle=(id,f)=>{const u=pos.map(p=>p.id===id?{...p,[f]:!p[f]}:p);setPos(u);LS.set('posisjoner',u);};
+  const fjern=(id)=>{if(!confirm('Fjerne posisjon?'))return;const u=pos.filter(p=>p.id!==id);setPos(u);LS.set('posisjoner',u);};
+  const oppdater=(id,ny)=>{const u=pos.map(p=>p.id===id?beregnPos(p,ny):p);setPos(u);LS.set('posisjoner',u);};
+  if(!pos.length)return h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
+    h('div',{style:{fontSize:28,marginBottom:10}},'📋'),
+    h('div',{style:{fontSize:13}},'Ingen registrerte posisjoner ennå.'),
+    h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:6}},'Bruk "Kalk"-knappen og trykk "Registrer kjøp"')
+  );
+  return h('div',null,
+    h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:14}},pos.length+' posisjoner · Klikk target for å markere · ✏️ Juster for å endre inngang'),
+    pos.map(p=>h(PosKort,{key:p.id,p,onToggle:toggle,onFjern:fjern,onOppdater:oppdater}))
+  );
+}
+
+const TT_LABELS=['Pris > MA50','Pris > MA150','Pris > MA200','MA50 > MA150','MA150 > MA200','MA200 ↑','≤25% fra topp','RS ≥ 70'];
+
+function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
+  const open=openTicker===aksje.ticker;
+  const toggle=()=>setOpenTicker(open?null:aksje.ticker);
+  const{ttScore:tt,rsScore:rs,total}=aksje;
+  const ttFl=[...aksje.tt,rs!=null?(rs>=70?'JA':'NEI'):''];
+  const rc=total>=11?'#22c55e':total>=9?'#84cc16':total>=7?'#eab308':'#f97316';
+  const tc=tt>=7?'#22c55e':tt>=5?'#eab308':'#f97316';
+  const sep=(lbl,val)=>h('span',{key:lbl,className:'badge',style:{marginRight:3,
+    background:val==='JA'?'rgba(34,197,94,.15)':val==='NEI'?'rgba(248,113,113,.08)':'transparent',
+    color:val==='JA'?'#22c55e':val==='NEI'?'#f87171':'var(--txt4)',
+    border:`1px solid ${val==='JA'?'rgba(34,197,94,.3)':val==='NEI'?'rgba(248,113,113,.2)':'var(--bdr)'}`}},lbl);
+  const sym=aksje.ticker.replace(/\.(OL|ST|CO|HE)$/,'');
+  const tvSym=aksje._exchange==='OSL'?sym:sym.replace(/-/g,'_');
+  const rows=[
+    h('tr',{key:'m',onClick:toggle,style:{background:open?'rgba(59,130,246,.08)':''},
+      onMouseEnter:e=>e.currentTarget.style.background='rgba(59,130,246,.07)',
+      onMouseLeave:e=>e.currentTarget.style.background=open?'rgba(59,130,246,.08)':''},
+      h('td',null,h('span',{style:{color:'var(--txt4)',fontSize:11}},'#'+rank)),
+      h('td',null,
+        h('div',{style:{fontWeight:700,color:'var(--txt)',fontSize:14}},sym),
+        h('div',{style:{fontSize:11,color:'var(--txt3)',maxWidth:140,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},aksje.name)
+      ),
+      h('td',{style:{textAlign:'right'}},
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},aksje.price!=null?aksje.price.toFixed(2):'—'),
+        aksje.high52&&aksje.price?h('div',{style:{fontSize:10,color:'var(--txt4)'}},((aksje.price/aksje.high52)*100).toFixed(0)+'% av topp'):null
+      ),
+      h('td',{style:{textAlign:'center'}},
+        h('div',{style:{display:'inline-flex',alignItems:'center',justifyContent:'center',
+          width:36,height:36,borderRadius:'50%',border:`2px solid ${tc}`,color:tc,fontSize:15,fontWeight:700}},tt)
+      ),
+      h('td',{style:{textAlign:'center'}},
+        rs!=null?h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:3}},
+          h('div',{style:{fontSize:13,fontWeight:700,color:rs>=80?'#22c55e':rs>=70?'#84cc16':rs>=50?'#eab308':'var(--txt3)'}},Math.round(rs)),
+          h('div',{style:{width:36,height:3,background:'var(--bdr)',borderRadius:2}},
+            h('div',{style:{height:'100%',borderRadius:2,width:rs+'%',background:rs>=80?'#22c55e':rs>=70?'#84cc16':'#eab308'}}))
+        ):h('span',{style:{color:'var(--txt4)'}},'—')
+      ),
+      h('td',{style:{textAlign:'center'}},sep('NI',aksje.sepaEps),sep('Rev',aksje.sepaRev),sep('ROE',aksje.sepaRoe),sep('Marg',aksje.sepaMarg)),
+      h('td',{style:{textAlign:'center'}},
+        h('div',{className:'ring',style:{background:`conic-gradient(${rc} ${(total/12)*360}deg, var(--bdr) 0deg)`}},
+          h('div',{className:'ring-in',style:{color:rc}},total))
+      ),
+      h('td',{style:{textAlign:'center'}},
+        aksje.vcpScore!=null
+          ?h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:2}},
+              h('div',{style:{fontSize:13,fontWeight:700,
+                color:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}},
+                aksje.vcpScore),
+              h('div',{style:{width:36,height:3,background:'var(--bdr)',borderRadius:2}},
+                h('div',{style:{height:'100%',borderRadius:2,width:(aksje.vcpScore*10)+'%',
+                  background:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}})),
+              aksje.vcpDetaljer?h('div',{style:{fontSize:9,color:'var(--txt4)',marginTop:1,whiteSpace:'nowrap'}},aksje.vcpDetaljer):null
+            )
+          :h('span',{style:{color:'var(--txt4)'}},'—')
+      ),
+      h('td',{style:{textAlign:'center'}},
+        h('button',{onClick:e=>{e.stopPropagation();onKalk(aksje);},style:{
+          background:'var(--acc-bg)',border:'1px solid var(--acc)',borderRadius:5,
+          color:'var(--acc)',fontSize:11,padding:'4px 8px',cursor:'pointer'}},'Kalk')
+      )
+    )
+  ];
+  if(open)rows.push(h('tr',{key:'d',style:{background:'var(--bg3)'}},
+    h('td',{colSpan:8},
+      h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:16,padding:'12px 14px 6px'}},
+        h('div',null,
+          h('div',{className:'sec-lbl'},'Glidende snitt'),
+          [['MA50',aksje.ma50],['MA150',aksje.ma150],['MA200',aksje.ma200]].map(([l,v])=>
+            h('div',{key:l,className:'drow'},
+              h('span',{className:'dk'},l),
+              h('span',{className:'dv'},v!=null?v.toFixed(2):'—',
+                v!=null&&aksje.price!=null?h('span',{style:{color:aksje.price>v?'#22c55e':'#f87171',marginLeft:4}},aksje.price>v?'▲':'▼'):null)
+            )
+          )
+        ),
+        h('div',null,
+          h('div',{className:'sec-lbl'},'Trend Template'),
+          TT_LABELS.map((l,i)=>h('div',{key:l,style:{display:'flex',gap:5,alignItems:'center',fontSize:11,marginBottom:3}},
+            h('span',{style:{color:ttFl[i]==='JA'?'#22c55e':'#f87171'}},ttFl[i]==='JA'?'✓':'✗'),
+            h('span',{style:{color:'var(--txt3)'}},l)
+          ))
+        ),
+        h('div',null,
+          h('div',{className:'sec-lbl'},'Fundamental'),
+          [['NI-vekst YoY',aksje.niVekst],['Rev-vekst YoY',aksje.revVekst],['ROE',aksje.roe],['Nettomarg.',aksje.netMarg]].map(([l,v])=>
+            h('div',{key:l,className:'drow'},h('span',{className:'dk'},l),h('span',{className:'dv'},v!=null?v.toFixed(1)+'%':'—'))
+          )
+        ),
+        h('div',null,
+          h('div',{className:'sec-lbl'},'VCP-mønster'),
+          h('div',{className:'drow'},
+            h('span',{className:'dk'},'Score'),
+            h('span',{className:'dv',style:{color:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt2)'}},
+              aksje.vcpScore!=null?aksje.vcpScore+' / 10':'—')
+          ),
+          h('div',{className:'drow'},h('span',{className:'dk'},'Faser'),h('span',{className:'dv'},aksje.vcpDetaljer||'—')),
+          h('div',{style:{marginTop:6,fontSize:10,color:'var(--txt4)',lineHeight:1.6}},
+            'Høy score = progressivt synkende drawdowns + tørkende volum + nær pivot. Verifiser alltid i TradingView.')
+        )
+      ),
+      h('div',{style:{padding:'4px 14px 14px',display:'flex',gap:8,alignItems:'center'}},
+        h('a',{href:'https://www.tradingview.com/chart/?symbol='+tvPrefix+'%3A'+tvSym,
+          target:'_blank',rel:'noopener noreferrer',
+          style:{fontSize:12,color:'var(--acc)',textDecoration:'none',background:'var(--acc-bg)',
+                 border:'1px solid var(--acc)',borderRadius:5,padding:'4px 10px'}},'📈 Åpne i TradingView'),
+        aksje.avgVol!=null?h('span',{style:{fontSize:11,color:'var(--txt4)'}},'Avg.vol '+(aksje.avgVol/1000).toFixed(0)+'k'):null
+      )
+    )
+  ));
+  return h(React.Fragment,null,...rows);
+}
+
+function App(){
+  const [dark,setDark]=useState(()=>LS.get('dark',true));
+  const [activeTab,setActiveTab]=useState('screener');
+  const [aktivBørs,setAktivBørs]=useState(()=>LS.get('aktiv_bors','ALLE'));
+  const [urls,setUrls]=useState(()=>LS.get('webapp_urls',{OSL:'',STO:'',CPH:'',HEL:''}));
+  const [allData,setAllData]=useState(()=>LS.get('cached_data',{}));
+  const [loading,setLoading]=useState(false);
+  const [loadingBors,setLoadingBors]=useState(null);
+  const [error,setError]=useState(null);
+  const [ok,setOk]=useState(null);
+  const [minScore,setMinScore]=useState(7);
+  const [sortBy,setSortBy]=useState('total');
+  const [kalkAksje,setKalkAksje]=useState(null);
+  const [openTicker,setOpenTicker]=useState(null);
+  const autoRef=useRef(false);
+
+  useEffect(()=>{document.body.className=dark?'':'light';},[dark]);
+  useEffect(()=>{LS.set('dark',dark);},[dark]);
+  useEffect(()=>{LS.set('aktiv_bors',aktivBørs);},[aktivBørs]);
+
+  useEffect(()=>{
+    if(autoRef.current)return;autoRef.current=true;
+    const saved=LS.get('webapp_urls',{});
+    EXCHANGES.forEach(ex=>{if(saved[ex.id])doLoad(ex.id,saved[ex.id],true);});
+  },[]);
+
+  const doLoad=async(borsId,url,stille)=>{
+    if(!url)return;
+    if(!stille){setLoading(true);setError(null);setOk(null);}
+    setLoadingBors(borsId);
+    try{
+      const res=await fetch(url);
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const json=await res.json();
+      const rows=parseRows(Array.isArray(json)?json:[]);
+      if(!rows.length)throw new Error('Ingen data returnert');
+      setAllData(prev=>{
+        const updated={...prev,[borsId]:rows};
+        LS.set('cached_data',updated);
+        return updated;
+      });
+      if(!stille)setOk('✓ '+rows.length+' aksjer lastet fra '+borsId+' · '+new Date().toLocaleTimeString('nb-NO'));
+    }catch(e){if(!stille)setError(borsId+': '+e.message);}
+    setLoadingBors(null);if(!stille)setLoading(false);
+  };
+
+  const lastAlle=()=>EXCHANGES.forEach(ex=>{const u=LS.get('webapp_urls',{})[ex.id];if(u)doLoad(ex.id,u,false);});
+  const saveUrls=()=>{LS.set('webapp_urls',urls);setOk('✓ URLer lagret — laster automatisk ved neste åpning');};
+
+  const visBørs=useMemo(()=>{
+    if(aktivBørs==='ALLE'){
+      return EXCHANGES.flatMap(ex=>{
+        const ex_obj=EXCHANGES.find(e=>e.id===ex.id);
+        return(allData[ex.id]||[]).map(a=>({...a,_exchange:ex.id,_tvPrefix:ex_obj.tv}));
+      });
+    }
+    const ex=EXCHANGES.find(e=>e.id===aktivBørs);
+    return(allData[aktivBørs]||[]).map(a=>({...a,_exchange:aktivBørs,_tvPrefix:ex?.tv||'OSLO'}));
+  },[allData,aktivBørs]);
+
+  useEffect(()=>{setOpenTicker(null);},[sortBy,aktivBørs,minScore]);
+
+  const filtered=useMemo(()=>{
+    const cmp=(a,b)=>{
+      const rs=(x)=>x.rsScore||0;
+      const vcp=(x)=>x.vcpScore??-1;
+      if(sortBy==='total') return(b.total-a.total)||(rs(b)-rs(a))||(vcp(b)-vcp(a));
+      if(sortBy==='tt')    return(b.ttScore-a.ttScore)||(b.total-a.total)||(rs(b)-rs(a));
+      if(sortBy==='rs')    return(rs(b)-rs(a))||(b.total-a.total)||(vcp(b)-vcp(a));
+      if(sortBy==='fund')  return(b.fundScore-a.fundScore)||(b.total-a.total)||(rs(b)-rs(a));
+      if(sortBy==='vcp'){
+        if(a.vcpScore==null&&b.vcpScore==null) return(rs(b)-rs(a));
+        if(a.vcpScore==null) return 1;
+        if(b.vcpScore==null) return -1;
+        return(b.vcpScore-a.vcpScore)||(b.total-a.total)||(rs(b)-rs(a));
+      }
+      return a.ticker.localeCompare(b.ticker);
+    };
+    return visBørs.filter(a=>a.total>=minScore).sort(cmp);
+  },[visBørs,minScore,sortBy]);
+
+  const exportTV=useCallback(()=>{
+    const txt=filtered.map(a=>{
+      const ex=EXCHANGES.find(e=>e.id===a._exchange)||EXCHANGES[0];
+      const sym=a.ticker.replace(ex.suffix,'');
+      const tvSym=a._exchange==='OSL'?sym:sym.replace(/-/g,'_');
+      return ex.tv+':'+tvSym;
+    }).join('\n');
+    const el=document.createElement('a');
+    el.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
+    el.download='minervini_norden.txt';el.click();
+  },[filtered]);
+
+  const loaded=EXCHANGES.some(ex=>(allData[ex.id]||[]).length>0);
+  const topCount=visBørs.filter(a=>a.total>=10).length;
+
+  const tb=(id,lbl)=>h('button',{className:'tab'+(activeTab===id?' active':''),onClick:()=>setActiveTab(id)},lbl);
+  const cb=(val,lbl,set,cur)=>h('button',{className:'ctrl-btn'+(cur===val?' on':''),onClick:()=>set(val)},lbl);
+
+  return h('div',null,
+    h('div',{className:'hdr'},
+      h('div',null,
+        h('div',{className:'hdr-sub'},'NORDEN — MINERVINI SCREENER'),
+        h('div',{className:'hdr-title'},'Minervini Screener')
+      ),
+      h('div',{style:{marginLeft:'auto',display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}},
+        loaded&&h(React.Fragment,null,
+          h('div',{style:{textAlign:'right'}},
+            h('div',{style:{fontSize:20,fontWeight:700,color:'#22c55e'}},topCount),
+            h('div',{style:{fontSize:9,color:'var(--txt4)'}},'score ≥ 10')
+          ),
+          h('div',{style:{textAlign:'right'}},
+            h('div',{style:{fontSize:20,fontWeight:700,color:'var(--txt2)'}},visBørs.length),
+            h('div',{style:{fontSize:9,color:'var(--txt4)'}},aktivBørs==='ALLE'?'norden totalt':'totalt')
+          )
+        ),
+        h('button',{style:{background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:20,
+          padding:'5px 12px',cursor:'pointer',color:'var(--txt2)',fontSize:15},onClick:()=>setDark(!dark)},dark?'☀️':'🌙')
+      )
+    ),
+
+    h('div',{className:'main'},
+      h('div',{className:'tab-bar'},
+        tb('screener','📊 Screener'),
+        tb('innstillinger','⚙️ Innstillinger'),
+        tb('posisjoner','💼 Posisjoner'),
+        tb('ordliste','📖 Ordliste')
+      ),
+
+      activeTab==='screener'&&h('div',null,
+        !loaded&&h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
+          h('div',{style:{fontSize:32,marginBottom:10}},'📊'),
+          loadingBors?h('div',{style:{fontSize:13,color:'var(--txt3)'}},'Laster '+loadingBors+'…'):
+          h('div',null,
+            h('div',{style:{fontSize:13,marginBottom:6}},'Konfigurer Web App URLer under '),
+            h('span',{style:{color:'var(--acc)',cursor:'pointer',textDecoration:'underline'},
+              onClick:()=>setActiveTab('innstillinger')},'⚙️ Innstillinger')
+          )
+        ),
+        loaded&&h('div',null,
+          error&&h('div',{className:'err'},'⚠ '+error),
+          ok&&h('div',{className:'ok'},ok),
+          h('div',{className:'bors-bar'},
+            h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Børs:'),
+            h('button',{className:'ctrl-btn'+(aktivBørs==='ALLE'?' on':''),onClick:()=>setAktivBørs('ALLE')},'🌐 Alle'),
+            ...EXCHANGES.map(ex=>{
+              const count=(allData[ex.id]||[]).length;
+              return h('button',{key:ex.id,
+                className:'ctrl-btn'+(aktivBørs===ex.id?' on':''),
+                onClick:()=>setAktivBørs(ex.id),
+                style:{opacity:count>0?1:0.4}},
+                ex.flag+' '+ex.navn+(count?' ('+count+')':'')
+              );
+            }),
+            h('button',{className:'btn-ghost',onClick:lastAlle,style:{marginLeft:'auto'}},
+              loadingBors?'⏳ '+loadingBors+'…':'🔄 Oppdater alle')
+          ),
+          h('div',{style:{display:'flex',gap:7,alignItems:'center',marginBottom:12,flexWrap:'wrap'}},
+            h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Min score:'),
+            ...[5,7,9,10,11].map(s=>cb(s,s+'+',setMinScore,minScore)),
+            h('div',{style:{marginLeft:'auto',display:'flex',gap:6,alignItems:'center',flexWrap:'wrap'}},
+              h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Sorter:'),
+              cb('total','Total',setSortBy,sortBy),cb('tt','TT',setSortBy,sortBy),
+              cb('rs','RS',setSortBy,sortBy),cb('fund','Fund',setSortBy,sortBy),
+              cb('vcp','VCP',setSortBy,sortBy),
+              h('button',{className:'btn-green',onClick:exportTV},'↓ TradingView')
+            )
+          ),
+          h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:10}},filtered.length+' aksjer · Klikk rad for detaljer'),
+          h('div',{style:{overflowX:'auto'}},
+            h('table',null,
+              h('thead',null,h('tr',null,
+                ['#','Aksje','Kurs','TT','RS','SEPA','Score','VCP',''].map(x=>h('th',{key:x,className:x==='Kurs'?'r':x==="#"?'':'c'},x))
+              )),
+              h('tbody',null,filtered.map((a,i)=>h(Rad,{key:a.ticker+a._exchange,aksje:a,rank:i+1,onKalk:setKalkAksje,tvPrefix:a._tvPrefix||'OSLO',openTicker,setOpenTicker})))
+            )
+          ),
+          filtered.length===0&&h('div',{style:{textAlign:'center',padding:30,color:'var(--txt4)'}},'Ingen aksjer med score ≥ '+minScore),
+          h('div',{className:'guide-grid'},
+            [['1. Velg kandidat','Score ≥ 10, RS ≥ 70. Let etter VCP-mønster i TradingView.'],
+             ['2. Entry','Breakout over pivot på 40-50% over gj.snittlig volum.'],
+             ['3. Posisjonsstørrelse','Maks 1-2% risiko per trade. Bruk Kalk-knappen.'],
+             ['4. Stop-loss','7-8% under inngang. Flytt aldri ned.'],
+             ['5. Target','Min 3:1. Ta delvis ved 2:1, la resten løpe.'],
+             ['6. Exit','Brudd under stigende MA50 eller distribusjon.'],
+            ].map(([t,k])=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},k)))
+          )
+        )
+      ),
+
+      activeTab==='innstillinger'&&h('div',{style:{maxWidth:700}},
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Web App URLer per børs'),
+        h('div',{className:'info-box'},
+          h('strong',{style:{color:'var(--txt2)'}},'Legg til doGet() i hvert Apps Script og deploy som Web App (Alle kan se):'),
+          h('pre',{style:{background:'var(--bg3)',border:'1px solid var(--bdr)',borderRadius:6,
+            padding:12,fontSize:11,color:'var(--acc)',overflowX:'auto',margin:'8px 0',lineHeight:1.7,whiteSpace:'pre'}},
+`function doGet() {
+  const ds = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Data");
+  if (!ds) return ContentService.createTextOutput("[]")
+    .setMimeType(ContentService.MimeType.JSON);
+  const data = ds.getDataRange().getValues();
+  const h = data[0];
+  const rows = data.slice(1).map(r => {
+    const o = {}; h.forEach((k,i) => o[k]=r[i]); return o;
+  });
+  return ContentService.createTextOutput(JSON.stringify(rows))
+    .setMimeType(ContentService.MimeType.JSON);
+}`)
+        ),
+        EXCHANGES.map(ex=>h('div',{key:ex.id,style:{marginBottom:14}},
+          h('div',{className:'field-lbl'},ex.flag+' '+ex.navn+' ('+ex.id+') — Web App URL'),
+          h('div',{style:{display:'flex',gap:8}},
+            h('input',{type:'url',value:urls[ex.id]||'',
+              onChange:e=>setUrls({...urls,[ex.id]:e.target.value}),
+              placeholder:'https://script.google.com/macros/s/…/exec',style:{flex:1}}),
+            h('button',{className:'btn-ghost',disabled:!urls[ex.id],
+              onClick:()=>doLoad(ex.id,urls[ex.id])},loadingBors===ex.id?'Laster…':'Test')
+          ),
+          (allData[ex.id]||[]).length>0&&h('div',{style:{fontSize:11,color:'#22c55e',marginTop:3}},
+            '✓ '+(allData[ex.id]||[]).length+' aksjer cachet')
+        )),
+        error&&h('div',{className:'err'},'⚠ '+error),
+        ok&&h('div',{className:'ok'},ok),
+        h('button',{className:'btn',onClick:()=>{saveUrls();lastAlle();}},loading?'Laster…':'Lagre og oppdater alle')
+      ),
+
+      activeTab==='posisjoner'&&h(Posisjoner,null),
+
+      activeTab==='ordliste'&&h('div',null,
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Minervini-ordliste'),
+        h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:12}},
+          GLOSS.map(({t,c})=>h('div',{key:t,className:'guide-card'},
+            h('div',{className:'g-title'},t),h('div',{className:'g-text'},c)))
+        )
+      )
+    ),
+
+    kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjøpt:()=>setActiveTab('posisjoner')})
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(h(App,null));
+</script>
+</body>
+</html>
