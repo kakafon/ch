@@ -76,41 +76,41 @@ const LS={
 };
 
 const EXCHANGES=[
-  {id:'OSL',navn:'Oslo',      flag:'🇳🇴',suffix:'.OL', tv:'OSLO',    valuta:'NOK'},
-  {id:'STO',navn:'Stockholm', flag:'🇸🇪',suffix:'.ST', tv:'OMXSTO',  valuta:'SEK'},
-  {id:'CPH',navn:'København', flag:'🇩🇰',suffix:'.CO', tv:'OMXCOP',  valuta:'DKK'},
-  {id:'HEL',navn:'Helsinki',  flag:'🇫🇮',suffix:'.HE', tv:'OMXHEX',  valuta:'EUR'},
+  {id:'OSL',navn:'Oslo',      flag:'\u{1F1F3}\u{1F1F4}',suffix:'.OL', tv:'OSLO',    valuta:'NOK'},
+  {id:'STO',navn:'Stockholm', flag:'\u{1F1F8}\u{1F1EA}',suffix:'.ST', tv:'OMXSTO',  valuta:'SEK'},
+  {id:'CPH',navn:'K\u00F8benhavn', flag:'\u{1F1E9}\u{1F1F0}',suffix:'.CO', tv:'OMXCOP',  valuta:'DKK'},
+  {id:'HEL',navn:'Helsinki',  flag:'\u{1F1EB}\u{1F1EE}',suffix:'.HE', tv:'OMXHEX',  valuta:'EUR'},
 ];
 
 const GLOSS=[
-  {t:'Trend Template (TT)',c:'Minervinis 8 tekniske krav. Aksjen må handles over MA50, MA150 og MA200. MA-ene må være sortert riktig (50>150>200). MA200 skal stige. Kursen skal være innen 25% av 52-ukers høy. RS-score ≥70. Jo flere krav (score 0-8), jo sterkere teknisk oppsett.'},
-  {t:'VCP — Volatility Contraction Pattern',c:'Minervinis viktigste mønster. Kursen konsoliderer i 3-4 faser med SYNKENDE volatilitet og SYNKENDE volum. F.eks: −20% → −12% → −7% → −4%. Hvert håndtak er smalere. Volumet tørker inn. Utbrudd skjer på høyt volum. Jo smalere siste kontraksjon, jo lavere risiko.'},
-  {t:'Pivot Point',c:'Den øverste motstandssonen i siste kontraksjon av et VCP-mønster. Entry er et brudd over dette nivået på klart høyere volum enn normalt (minst 40-50% over 50-dagers gjennomsnittsvolum). Kjøp IKKE under pivoten.'},
-  {t:'RS Score (Relativ Styrke)',c:'IBD-inspirert beregning. Sammenligner aksjes vektede avkastning siste 12 mnd mot nasjonal indeks. Score 1-99. Over 70 er bra, over 80 er sterkt. Minervini vil ha RS ≥70 FØR utbruddet. RS-linjen bør ideelt nå nye høyder før kursen gjør det.'},
-  {t:'Distribusjon',c:'Institusjonell salgsaktivitet. Kjennetegn: kursfall på HØYERE enn normalt volum, spesielt etter en oppgang. 3-5 distribusjonsdager på en indeks over 4-5 uker er bearish signal. På enkeltaksje: store røde staker med høyt volum etter oppgang = advarsel.'},
-  {t:'SEPA (Specific Entry Point Analysis)',c:'Minervinis rammeverk. Kombinerer: Trend (teknikk), Fundamentalt (EPS/Rev vekst >20%/15%, ROE >17%), Sentiment (institusjonell eierskap), og Katalysator (noe som kan drive kursen). Alle fire bør peke samme vei.'},
-  {t:'Stop-loss',c:'Festes 7-8% under inngangspris (eller under pivot-nivå). Flyttes ALDRI ned. Akseptér tapet og kom deg ut. Minervini: "Cut losses and let profits run." En stop er ikke feil — det er risikostyring.'},
-  {t:'Posisjonsstørrelse',c:'Maks 1-2% av total konto i risiko per trade. Formel: (Konto × 1%) ÷ (Inngang − Stop) = Antall aksjer. Med 100k konto og 1% risiko: 1000 kr risiko. Stop 8% under 100 kr inngang = 8 kr risiko/aksje → kjøp 125 aksjer.'},
-  {t:'2:1, 3:1, 4:1 Targets',c:'Risk/reward-mål. Hvis risiko er 8 kr per aksje er 2:1 = +16 kr, 3:1 = +24 kr, 4:1 = +32 kr over inngang. Minervini tar gjerne delvis gevinst ved 20-25% oppgang og lar resten løpe. Minste akseptable R/R er 3:1.'},
-  {t:'Trailing Stop',c:'Etter 20-25% oppgang: flytt stop til breakeven. Etter 30%+: bruk MA50 som trailing stop. La vinnerne løpe til teknisk brudd. Ikke selg for tidlig p.g.a. frykt — det er den vanligste feilen.'},
+  {t:'Trend Template (TT)',c:'Minervinis 8 tekniske krav. Aksjen m\u00E5 handles over MA50, MA150 og MA200. MA-ene m\u00E5 v\u00E6re sortert riktig (50>150>200). MA200 skal stige. Kursen skal v\u00E6re innen 25% av 52-ukers h\u00F8y. RS-score \u226570. Jo flere krav (score 0-8), jo sterkere teknisk oppsett.'},
+  {t:'VCP \u2014 Volatility Contraction Pattern',c:'Minervinis viktigste m\u00F8nster. Kursen konsoliderer i 3-4 faser med SYNKENDE volatilitet og SYNKENDE volum. F.eks: \u221220% \u2192 \u221212% \u2192 \u22127% \u2192 \u22124%. Hvert h\u00E5ndtak er smalere. Volumet t\u00F8rker inn. Utbrudd skjer p\u00E5 h\u00F8yt volum. Jo smalere siste kontraksjon, jo lavere risiko.'},
+  {t:'Pivot Point',c:'Den \u00F8verste motstandssonen i siste kontraksjon av et VCP-m\u00F8nster. Entry er et brudd over dette niv\u00E5et p\u00E5 klart h\u00F8yere volum enn normalt (minst 40-50% over 50-dagers gjennomsnittsvolum). Kj\u00F8p IKKE under pivoten.'},
+  {t:'RS Score (Relativ Styrke)',c:'IBD-inspirert beregning. Sammenligner aksjes vektede avkastning siste 12 mnd mot nasjonal indeks. Score 1-99. Over 70 er bra, over 80 er sterkt. Minervini vil ha RS \u226570 F\u00D8R utbruddet. RS-linjen b\u00F8r ideelt n\u00E5 nye h\u00F8yder f\u00F8r kursen gj\u00F8r det.'},
+  {t:'Distribusjon',c:'Institusjonell salgsaktivitet. Kjennetegn: kursfall p\u00E5 H\u00D8YERE enn normalt volum, spesielt etter en oppgang. 3-5 distribusjonsdager p\u00E5 en indeks over 4-5 uker er bearish signal. P\u00E5 enkeltaksje: store r\u00F8de staker med h\u00F8yt volum etter oppgang = advarsel.'},
+  {t:'SEPA (Specific Entry Point Analysis)',c:'Minervinis rammeverk. Kombinerer: Trend (teknikk), Fundamentalt (EPS/Rev vekst >20%/15%, ROE >17%), Sentiment (institusjonell eierskap), og Katalysator (noe som kan drive kursen). Alle fire b\u00F8r peke samme vei.'},
+  {t:'Stop-loss',c:'Festes 7-8% under inngangspris (eller under pivot-niv\u00E5). Flyttes ALDRI ned. Aksept\u00E9r tapet og kom deg ut. Minervini: "Cut losses and let profits run." En stop er ikke feil \u2014 det er risikostyring.'},
+  {t:'Posisjonst\u00F8rrelse',c:'Maks 1-2% av total konto i risiko per trade. Formel: (Konto \u00D7 1%) \u00F7 (Inngang \u2212 Stop) = Antall aksjer. Med 100k konto og 1% risiko: 1000 kr risiko. Stop 8% under 100 kr inngang = 8 kr risiko/aksje \u2192 kj\u00F8p 125 aksjer.'},
+  {t:'2:1, 3:1, 4:1 Targets',c:'Risk/reward-m\u00E5l. Hvis risiko er 8 kr per aksje er 2:1 = +16 kr, 3:1 = +24 kr, 4:1 = +32 kr over inngang. Minervini tar gjerne delvis gevinst ved 20-25% oppgang og lar resten l\u00F8pe. Minste akseptable R/R er 3:1.'},
+  {t:'Trailing Stop',c:'Etter 20-25% oppgang: flytt stop til breakeven. Etter 30%+: bruk MA50 som trailing stop. La vinnerne l\u00F8pe til teknisk brudd. Ikke selg for tidlig p.g.a. frykt \u2014 det er den vanligste feilen.'},
 ];
 
 function parseRows(rows){
   return rows.map(r=>{
-    const n=k=>{const v=parseFloat(String(r[k]||'').replace(/⚠/g,'').trim());return isNaN(v)?null:v;};
+    const n=k=>{const v=parseFloat(String(r[k]||'').replace(/\u26A0/g,'').trim());return isNaN(v)?null:v;};
     const s=k=>String(r[k]||'').trim();
     const ticker=s('Ticker');if(!ticker||ticker.length<2)return null;
-    return{ticker,name:s('Navn'),price:n('Kurs'),high52:n('52w Høy'),low52:n('52w Lav'),
+    return{ticker,name:s('Navn'),price:n('Kurs'),high52:n('52w H\u00F8y'),low52:n('52w Lav'),
       avgVol:n('Avg.Vol(50d)'),ma50:n('MA50'),ma150:n('MA150'),ma200:n('MA200'),
       ttScore:n('TT Score (0-8)')||0,rsScore:n('RS Score (1-99)'),
       niVekst:n('NI-vekst YoY %'),revVekst:n('Omsetn.vekst YoY %'),
       roe:n('ROE %'),netMarg:n('Nettomarg. %'),
-      sepaEps:s('SEPA: NI≥20%'),sepaRev:s('SEPA: Rev≥15%'),
-      sepaRoe:s('SEPA: ROE≥17%'),sepaMarg:s('SEPA: Marg.↑'),
+      sepaEps:s('SEPA: NI\u226520%'),sepaRev:s('SEPA: Rev\u226515%'),
+      sepaRoe:s('SEPA: ROE\u226517%'),sepaMarg:s('SEPA: Marg.\u2191'),
       fundScore:n('Fund Score (0-4)')||0,total:n('Total Score (0-12)')||0,
       updated:s('Oppdatert'),
       tt:['TT1: Pris>MA50','TT2: Pris>MA150','TT3: Pris>MA200',
-          'TT4: MA50>MA150','TT5: MA150>MA200','TT6: MA200↑','TT7: ≤25% fra topp'].map(k=>s(k)),
+          'TT4: MA50>MA150','TT5: MA150>MA200','TT6: MA200\u2191','TT7: \u226525% fra topp'].map(k=>s(k)),
       vcpScore:(()=>{const v=n('VCP Score (0-10)');return(v!=null&&v>=0&&v<=10)?v:null;})(),
       vcpDetaljer:s('VCP Detaljer'),
     };
@@ -128,7 +128,7 @@ function beregnPos(p,nyInngang){
     t4:+(inn*(1+p.sPst*4/100)).toFixed(2)};
 }
 
-function Kalkulator({aksje,onClose,onKjøpt}){
+function Kalkulator({aksje,onClose,onKjopt}){
   const [konto,setKonto]=useState(()=>LS.get('kalk_konto','100000'));
   const [rPst,setRPst]=useState(()=>LS.get('kalk_risiko','1'));
   const [sPst,setSPst]=useState(()=>LS.get('kalk_stop','8'));
@@ -148,23 +148,23 @@ function Kalkulator({aksje,onClose,onKjøpt}){
   const row=(lbl,val,hi)=>h('div',{className:'drow',style:hi?{fontWeight:700}:{}},
     h('span',{className:'dk'},lbl),h('span',{className:'dv',style:hi?{color:'#22c55e'}:{}},val)
   );
-  const doKjøpt=()=>{
+  const doKjopt=()=>{
     const pos={id:Date.now(),ticker:aksje.ticker,name:aksje.name,
       inngang:inn,stop,antall,totInv,riskKr,rPst:rP,sPst:sP,dato,t2,t3,t4,
       hitT2:false,hitT3:false,hitT4:false,hitStop:false};
     LS.set('posisjoner',[...LS.get('posisjoner',[]),pos]);
-    onKjøpt&&onKjøpt();onClose();
+    onKjopt&&onKjopt();onClose();
   };
   return h('div',{className:'modal-bg',onClick:onClose},
     h('div',{className:'modal',onClick:e=>e.stopPropagation()},
       h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}},
         h('div',null,h('div',{style:{fontSize:18,fontWeight:700,color:'var(--txt)'}},aksje.ticker),
           h('div',{style:{fontSize:11,color:'var(--txt3)'}},aksje.name)),
-        h('button',{style:{background:'none',border:'none',color:'var(--txt3)',fontSize:22,cursor:'pointer'},onClick:onClose},'✕')
+        h('button',{style:{background:'none',border:'none',color:'var(--txt3)',fontSize:22,cursor:'pointer'},onClick:onClose},'\u2715')
       ),
       fld('Kontobalanse',konto,setKonto),fld('Risiko (%)',rPst,setRPst),fld('Stop-loss (%)',sPst,setSPst),fld('Dato',dato,setDato),
       h('div',{style:{background:'var(--bg3)',borderRadius:8,padding:14,marginBottom:14}},
-        row('Inngangskurs',inn.toFixed(2)),row('Stop-kurs',stop+' (−'+sP+'%)'),
+        row('Inngangskurs',inn.toFixed(2)),row('Stop-kurs',stop+' (\u2212'+sP+'%)'),
         row('Risiko',riskKr.toLocaleString('nb-NO')+' ('+rP+'%)'),
         row('Antall aksjer',antall.toLocaleString('nb-NO')),
         row('Total investering',totInv.toLocaleString('nb-NO')),
@@ -174,7 +174,7 @@ function Kalkulator({aksje,onClose,onKjøpt}){
         row('Target 4:1 (+'+(sP*4).toFixed(0)+'%)',t4.toFixed(2),true)
       ),
       h('div',{style:{display:'flex',gap:8}},
-        h('button',{className:'btn',style:{background:'#16a34a'},onClick:doKjøpt},'✓ Registrer kjøp'),
+        h('button',{className:'btn',style:{background:'#16a34a'},onClick:doKjopt},'\u2713 Registrer kj\u00F8p'),
         h('button',{className:'btn-ghost',onClick:onClose},'Avbryt')
       )
     )
@@ -191,11 +191,11 @@ function PosKort({p,onToggle,onFjern,onOppdater}){
       h('div',null,
         h('span',{className:'pos-ticker'},p.ticker.replace(/\.(OL|ST|CO|HE)$/,''),' '),
         h('span',{className:'pos-name'},p.name),
-        h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:2}},p.dato+' · '+p.antall+' aksjer · '+p.totInv.toLocaleString('nb-NO'))
+        h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:2}},p.dato+' \u00B7 '+p.antall+' aksjer \u00B7 '+p.totInv.toLocaleString('nb-NO'))
       ),
       h('div',{style:{display:'flex',gap:6}},
-        h('button',{className:'btn-ghost',style:{fontSize:10,padding:'3px 8px'},onClick:()=>{setRed(!red);setTmp(String(p.inngang));}},red?'Avbryt':'✏️ Juster'),
-        h('button',{className:'btn-red',onClick:()=>onFjern(p.id)},'✕')
+        h('button',{className:'btn-ghost',style:{fontSize:10,padding:'3px 8px'},onClick:()=>{setRed(!red);setTmp(String(p.inngang));}},red?'Avbryt':'\u270F\uFE0F Juster'),
+        h('button',{className:'btn-red',onClick:()=>onFjern(p.id)},'\u2715')
       )
     ),
     red&&h('div',{style:{background:'var(--bg3)',borderRadius:6,padding:10,marginBottom:10,display:'flex',gap:8,alignItems:'center'}},
@@ -207,7 +207,7 @@ function PosKort({p,onToggle,onFjern,onOppdater}){
     ),
     h('div',{className:'target-row'},h('span',{style:{color:'var(--txt3)',minWidth:90,fontSize:11}},'Inngang'),h('span',{style:{fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},p.inngang.toFixed(2))),
     h('div',{className:'target-row'},
-      h('span',{style:{color:'#f87171',minWidth:90,fontSize:11}},'Stop −'+p.sPst+'%'),
+      h('span',{style:{color:'#f87171',minWidth:90,fontSize:11}},'Stop \u2212'+p.sPst+'%'),
       h('span',{style:{color:'#f87171',fontFamily:'monospace'}},p.stop.toFixed(2)),
       h('span',{className:p.hitStop?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hitStop')},p.hitStop?'STOPET':'aktiv')
     ),
@@ -215,7 +215,7 @@ function PosKort({p,onToggle,onFjern,onOppdater}){
       h('div',{key:f,className:'target-row'},
         h('span',{style:{color:'#22c55e',minWidth:90,fontSize:11}},'Target '+lbl),
         h('span',{style:{color:'#22c55e',fontFamily:'monospace'}},p[f].toFixed(2)),
-        h('span',{className:p['hit'+cap(f)]?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hit'+cap(f))},p['hit'+cap(f)]?'✓ Nådd':'åpen')
+        h('span',{className:p['hit'+cap(f)]?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hit'+cap(f))},p['hit'+cap(f)]?'\u2713 N\u00E5dd':'\u00E5pen')
       )
     )
   );
@@ -227,21 +227,23 @@ function Posisjoner(){
   const fjern=(id)=>{if(!confirm('Fjerne posisjon?'))return;const u=pos.filter(p=>p.id!==id);setPos(u);LS.set('posisjoner',u);};
   const oppdater=(id,ny)=>{const u=pos.map(p=>p.id===id?beregnPos(p,ny):p);setPos(u);LS.set('posisjoner',u);};
   if(!pos.length)return h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
-    h('div',{style:{fontSize:28,marginBottom:10}},'📋'),
-    h('div',{style:{fontSize:13}},'Ingen registrerte posisjoner ennå.'),
-    h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:6}},'Bruk "Kalk"-knappen og trykk "Registrer kjøp"')
+    h('div',{style:{fontSize:28,marginBottom:10}},'\uD83D\uDCCB'),
+    h('div',{style:{fontSize:13}},'Ingen registrerte posisjoner enn\u00E5.'),
+    h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:6}},'Bruk "Kalk"-knappen og trykk "Registrer kj\u00F8p"')
   );
   return h('div',null,
-    h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:14}},pos.length+' posisjoner · Klikk target for å markere · ✏️ Juster for å endre inngang'),
+    h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:14}},pos.length+' posisjoner \u00B7 Klikk target for \u00E5 markere \u00B7 \u270F\uFE0F Juster for \u00E5 endre inngang'),
     pos.map(p=>h(PosKort,{key:p.id,p,onToggle:toggle,onFjern:fjern,onOppdater:oppdater}))
   );
 }
 
-const TT_LABELS=['Pris > MA50','Pris > MA150','Pris > MA200','MA50 > MA150','MA150 > MA200','MA200 ↑','≤25% fra topp','RS ≥ 70'];
+const TT_LABELS=['Pris > MA50','Pris > MA150','Pris > MA200','MA50 > MA150','MA150 > MA200','MA200 \u2191','\u226525% fra topp','RS \u2265 70'];
 
 function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
-  const open=openTicker===aksje.ticker;
-  const toggle=()=>setOpenTicker(open?null:aksje.ticker);
+  // Bruker ticker|_exchange som unik ID for expanded-state
+  const rowId=aksje.ticker+'|'+aksje._exchange;
+  const open=openTicker===rowId;
+  const toggle=()=>setOpenTicker(open?null:rowId);
   const{ttScore:tt,rsScore:rs,total}=aksje;
   const ttFl=[...aksje.tt,rs!=null?(rs>=70?'JA':'NEI'):''];
   const rc=total>=11?'#22c55e':total>=9?'#84cc16':total>=7?'#eab308':'#f97316';
@@ -262,7 +264,7 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
         h('div',{style:{fontSize:11,color:'var(--txt3)',maxWidth:140,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},aksje.name)
       ),
       h('td',{style:{textAlign:'right'}},
-        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},aksje.price!=null?aksje.price.toFixed(2):'—'),
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},aksje.price!=null?aksje.price.toFixed(2):'\u2014'),
         aksje.high52&&aksje.price?h('div',{style:{fontSize:10,color:'var(--txt4)'}},((aksje.price/aksje.high52)*100).toFixed(0)+'% av topp'):null
       ),
       h('td',{style:{textAlign:'center'}},
@@ -274,7 +276,7 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
           h('div',{style:{fontSize:13,fontWeight:700,color:rs>=80?'#22c55e':rs>=70?'#84cc16':rs>=50?'#eab308':'var(--txt3)'}},Math.round(rs)),
           h('div',{style:{width:36,height:3,background:'var(--bdr)',borderRadius:2}},
             h('div',{style:{height:'100%',borderRadius:2,width:rs+'%',background:rs>=80?'#22c55e':rs>=70?'#84cc16':'#eab308'}}))
-        ):h('span',{style:{color:'var(--txt4)'}},'—')
+        ):h('span',{style:{color:'var(--txt4)'}},'\u2014')
       ),
       h('td',{style:{textAlign:'center'}},sep('NI',aksje.sepaEps),sep('Rev',aksje.sepaRev),sep('ROE',aksje.sepaRoe),sep('Marg',aksje.sepaMarg)),
       h('td',{style:{textAlign:'center'}},
@@ -292,7 +294,7 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
                   background:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}})),
               aksje.vcpDetaljer?h('div',{style:{fontSize:9,color:'var(--txt4)',marginTop:1,whiteSpace:'nowrap'}},aksje.vcpDetaljer):null
             )
-          :h('span',{style:{color:'var(--txt4)'}},'—')
+          :h('span',{style:{color:'var(--txt4)'}},'\u2014')
       ),
       h('td',{style:{textAlign:'center'}},
         h('button',{onClick:e=>{e.stopPropagation();onKalk(aksje);},style:{
@@ -309,41 +311,41 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
           [['MA50',aksje.ma50],['MA150',aksje.ma150],['MA200',aksje.ma200]].map(([l,v])=>
             h('div',{key:l,className:'drow'},
               h('span',{className:'dk'},l),
-              h('span',{className:'dv'},v!=null?v.toFixed(2):'—',
-                v!=null&&aksje.price!=null?h('span',{style:{color:aksje.price>v?'#22c55e':'#f87171',marginLeft:4}},aksje.price>v?'▲':'▼'):null)
+              h('span',{className:'dv'},v!=null?v.toFixed(2):'\u2014',
+                v!=null&&aksje.price!=null?h('span',{style:{color:aksje.price>v?'#22c55e':'#f87171',marginLeft:4}},aksje.price>v?'\u25B2':'\u25BC'):null)
             )
           )
         ),
         h('div',null,
           h('div',{className:'sec-lbl'},'Trend Template'),
           TT_LABELS.map((l,i)=>h('div',{key:l,style:{display:'flex',gap:5,alignItems:'center',fontSize:11,marginBottom:3}},
-            h('span',{style:{color:ttFl[i]==='JA'?'#22c55e':'#f87171'}},ttFl[i]==='JA'?'✓':'✗'),
+            h('span',{style:{color:ttFl[i]==='JA'?'#22c55e':'#f87171'}},ttFl[i]==='JA'?'\u2713':'\u2717'),
             h('span',{style:{color:'var(--txt3)'}},l)
           ))
         ),
         h('div',null,
           h('div',{className:'sec-lbl'},'Fundamental'),
           [['NI-vekst YoY',aksje.niVekst],['Rev-vekst YoY',aksje.revVekst],['ROE',aksje.roe],['Nettomarg.',aksje.netMarg]].map(([l,v])=>
-            h('div',{key:l,className:'drow'},h('span',{className:'dk'},l),h('span',{className:'dv'},v!=null?v.toFixed(1)+'%':'—'))
+            h('div',{key:l,className:'drow'},h('span',{className:'dk'},l),h('span',{className:'dv'},v!=null?v.toFixed(1)+'%':'\u2014'))
           )
         ),
         h('div',null,
-          h('div',{className:'sec-lbl'},'VCP-mønster'),
+          h('div',{className:'sec-lbl'},'VCP-m\u00F8nster'),
           h('div',{className:'drow'},
             h('span',{className:'dk'},'Score'),
             h('span',{className:'dv',style:{color:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt2)'}},
-              aksje.vcpScore!=null?aksje.vcpScore+' / 10':'—')
+              aksje.vcpScore!=null?aksje.vcpScore+' / 10':'\u2014')
           ),
-          h('div',{className:'drow'},h('span',{className:'dk'},'Faser'),h('span',{className:'dv'},aksje.vcpDetaljer||'—')),
+          h('div',{className:'drow'},h('span',{className:'dk'},'Faser'),h('span',{className:'dv'},aksje.vcpDetaljer||'\u2014')),
           h('div',{style:{marginTop:6,fontSize:10,color:'var(--txt4)',lineHeight:1.6}},
-            'Høy score = progressivt synkende drawdowns + tørkende volum + nær pivot. Verifiser alltid i TradingView.')
+            'H\u00F8y score = progressivt synkende drawdowns + t\u00F8rkende volum + n\u00E6r pivot. Verifiser alltid i TradingView.')
         )
       ),
       h('div',{style:{padding:'4px 14px 14px',display:'flex',gap:8,alignItems:'center'}},
         h('a',{href:'https://www.tradingview.com/chart/?symbol='+tvPrefix+'%3A'+tvSym,
           target:'_blank',rel:'noopener noreferrer',
           style:{fontSize:12,color:'var(--acc)',textDecoration:'none',background:'var(--acc-bg)',
-                 border:'1px solid var(--acc)',borderRadius:5,padding:'4px 10px'}},'📈 Åpne i TradingView'),
+                 border:'1px solid var(--acc)',borderRadius:5,padding:'4px 10px'}},'\uD83D\uDCC8 \u00C5pne i TradingView'),
         aksje.avgVol!=null?h('span',{style:{fontSize:11,color:'var(--txt4)'}},'Avg.vol '+(aksje.avgVol/1000).toFixed(0)+'k'):null
       )
     )
@@ -354,7 +356,7 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
 function App(){
   const [dark,setDark]=useState(()=>LS.get('dark',true));
   const [activeTab,setActiveTab]=useState('screener');
-  const [aktivBørs,setAktivBørs]=useState(()=>LS.get('aktiv_bors','ALLE'));
+  const [aktivBors,setAktivBors]=useState(()=>LS.get('aktiv_bors','ALLE'));
   const [urls,setUrls]=useState(()=>LS.get('webapp_urls',{OSL:'',STO:'',CPH:'',HEL:''}));
   const [allData,setAllData]=useState(()=>LS.get('cached_data',{}));
   const [loading,setLoading]=useState(false);
@@ -369,7 +371,7 @@ function App(){
 
   useEffect(()=>{document.body.className=dark?'':'light';},[dark]);
   useEffect(()=>{LS.set('dark',dark);},[dark]);
-  useEffect(()=>{LS.set('aktiv_bors',aktivBørs);},[aktivBørs]);
+  useEffect(()=>{LS.set('aktiv_bors',aktivBors);},[aktivBors]);
 
   useEffect(()=>{
     if(autoRef.current)return;autoRef.current=true;
@@ -392,45 +394,81 @@ function App(){
         LS.set('cached_data',updated);
         return updated;
       });
-      if(!stille)setOk('✓ '+rows.length+' aksjer lastet fra '+borsId+' · '+new Date().toLocaleTimeString('nb-NO'));
+      if(!stille)setOk('\u2713 '+rows.length+' aksjer lastet fra '+borsId+' \u00B7 '+new Date().toLocaleTimeString('nb-NO'));
     }catch(e){if(!stille)setError(borsId+': '+e.message);}
     setLoadingBors(null);if(!stille)setLoading(false);
   };
 
   const lastAlle=()=>EXCHANGES.forEach(ex=>{const u=LS.get('webapp_urls',{})[ex.id];if(u)doLoad(ex.id,u,false);});
-  const saveUrls=()=>{LS.set('webapp_urls',urls);setOk('✓ URLer lagret — laster automatisk ved neste åpning');};
+  const saveUrls=()=>{LS.set('webapp_urls',urls);setOk('\u2713 URLer lagret \u2014 laster automatisk ved neste \u00E5pning');};
 
-  const visBørs=useMemo(()=>{
-    if(aktivBørs==='ALLE'){
-      return EXCHANGES.flatMap(ex=>{
-        const ex_obj=EXCHANGES.find(e=>e.id===ex.id);
-        return(allData[ex.id]||[]).map(a=>({...a,_exchange:ex.id,_tvPrefix:ex_obj.tv}));
+  // ─── visBors: kombinerer alle borser og dedupliserer ────────────────────────
+  const visBors=useMemo(()=>{
+    let arr;
+    if(aktivBors==='ALLE'){
+      arr=EXCHANGES.flatMap(ex=>{
+        return(allData[ex.id]||[]).map(a=>({...a,_exchange:ex.id,_tvPrefix:ex.tv}));
       });
+    } else {
+      const ex=EXCHANGES.find(e=>e.id===aktivBors);
+      arr=(allData[aktivBors]||[]).map(a=>({...a,_exchange:aktivBors,_tvPrefix:ex?ex.tv:'OSLO'}));
     }
-    const ex=EXCHANGES.find(e=>e.id===aktivBørs);
-    return(allData[aktivBørs]||[]).map(a=>({...a,_exchange:aktivBørs,_tvPrefix:ex?.tv||'OSLO'}));
-  },[allData,aktivBørs]);
+    // Dedupliser: samme ticker+bors skal aldri forekomme to ganger
+    const seen=new Set();
+    return arr.filter(a=>{
+      const k=a.ticker+'|'+a._exchange;
+      if(seen.has(k))return false;
+      seen.add(k);return true;
+    });
+  },[allData,aktivBors]);
 
-  useEffect(()=>{setOpenTicker(null);},[sortBy,aktivBørs,minScore]);
+  // Nullstill apnet rad nar sortering/filter endres
+  useEffect(()=>{setOpenTicker(null);},[sortBy,aktivBors,minScore]);
 
+  // ─── filtered: filtrerer og sorterer med eksplisitte primær/sekundær/tertiær ─
   const filtered=useMemo(()=>{
+    // Eksplisitte null-sjekker (ikke ||0) slik at RS=0 og VCP=0 behandles korrekt
+    const rsVal=(x)=>x.rsScore!=null?x.rsScore:0;
+    const vcpVal=(x)=>x.vcpScore!=null?x.vcpScore:-1;
+
     const cmp=(a,b)=>{
-      const rs=(x)=>x.rsScore||0;
-      const vcp=(x)=>x.vcpScore??-1;
-      if(sortBy==='total') return(b.total-a.total)||(rs(b)-rs(a))||(vcp(b)-vcp(a));
-      if(sortBy==='tt')    return(b.ttScore-a.ttScore)||(b.total-a.total)||(rs(b)-rs(a));
-      if(sortBy==='rs')    return(rs(b)-rs(a))||(b.total-a.total)||(vcp(b)-vcp(a));
-      if(sortBy==='fund')  return(b.fundScore-a.fundScore)||(b.total-a.total)||(rs(b)-rs(a));
+      let d;
+      if(sortBy==='total'){
+        d=b.total-a.total;          if(d!==0)return d;  // primar:   Total ned
+        d=rsVal(b)-rsVal(a);        if(d!==0)return d;  // sekundar: RS ned
+        return vcpVal(b)-vcpVal(a);                      // tertiar:  VCP ned
+      }
+      if(sortBy==='tt'){
+        d=b.ttScore-a.ttScore;      if(d!==0)return d;  // primar:   TT ned
+        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
+        return rsVal(b)-rsVal(a);                        // tertiar:  RS ned
+      }
+      if(sortBy==='rs'){
+        d=rsVal(b)-rsVal(a);        if(d!==0)return d;  // primar:   RS ned
+        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
+        return vcpVal(b)-vcpVal(a);                      // tertiar:  VCP ned
+      }
+      if(sortBy==='fund'){
+        d=b.fundScore-a.fundScore;  if(d!==0)return d;  // primar:   Fund ned
+        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
+        return rsVal(b)-rsVal(a);                        // tertiar:  RS ned
+      }
       if(sortBy==='vcp'){
-        if(a.vcpScore==null&&b.vcpScore==null) return(rs(b)-rs(a));
-        if(a.vcpScore==null) return 1;
-        if(b.vcpScore==null) return -1;
-        return(b.vcpScore-a.vcpScore)||(b.total-a.total)||(rs(b)-rs(a));
+        const av=vcpVal(a),bv=vcpVal(b);
+        // Aksjer uten VCP-score legges bakerst
+        if(av===-1&&bv===-1)return rsVal(b)-rsVal(a);
+        if(av===-1)return 1;
+        if(bv===-1)return -1;
+        d=bv-av;                    if(d!==0)return d;  // primar:   VCP ned
+        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
+        return rsVal(b)-rsVal(a);                        // tertiar:  RS ned
       }
       return a.ticker.localeCompare(b.ticker);
     };
-    return visBørs.filter(a=>a.total>=minScore).sort(cmp);
-  },[visBørs,minScore,sortBy]);
+
+    // Spread til ny array FOR sort — forhindrer at visBors-referansen muteres
+    return [...visBors].filter(a=>a.total>=minScore).sort(cmp);
+  },[visBors,minScore,sortBy]);
 
   const exportTV=useCallback(()=>{
     const txt=filtered.map(a=>{
@@ -445,7 +483,7 @@ function App(){
   },[filtered]);
 
   const loaded=EXCHANGES.some(ex=>(allData[ex.id]||[]).length>0);
-  const topCount=visBørs.filter(a=>a.total>=10).length;
+  const topCount=visBors.filter(a=>a.total>=10).length;
 
   const tb=(id,lbl)=>h('button',{className:'tab'+(activeTab===id?' active':''),onClick:()=>setActiveTab(id)},lbl);
   const cb=(val,lbl,set,cur)=>h('button',{className:'ctrl-btn'+(cur===val?' on':''),onClick:()=>set(val)},lbl);
@@ -453,60 +491,60 @@ function App(){
   return h('div',null,
     h('div',{className:'hdr'},
       h('div',null,
-        h('div',{className:'hdr-sub'},'NORDEN — MINERVINI SCREENER'),
+        h('div',{className:'hdr-sub'},'NORDEN \u2014 MINERVINI SCREENER'),
         h('div',{className:'hdr-title'},'Minervini Screener')
       ),
       h('div',{style:{marginLeft:'auto',display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}},
         loaded&&h(React.Fragment,null,
           h('div',{style:{textAlign:'right'}},
             h('div',{style:{fontSize:20,fontWeight:700,color:'#22c55e'}},topCount),
-            h('div',{style:{fontSize:9,color:'var(--txt4)'}},'score ≥ 10')
+            h('div',{style:{fontSize:9,color:'var(--txt4)'}},'score \u2265 10')
           ),
           h('div',{style:{textAlign:'right'}},
-            h('div',{style:{fontSize:20,fontWeight:700,color:'var(--txt2)'}},visBørs.length),
-            h('div',{style:{fontSize:9,color:'var(--txt4)'}},aktivBørs==='ALLE'?'norden totalt':'totalt')
+            h('div',{style:{fontSize:20,fontWeight:700,color:'var(--txt2)'}},visBors.length),
+            h('div',{style:{fontSize:9,color:'var(--txt4)'}},aktivBors==='ALLE'?'norden totalt':'totalt')
           )
         ),
         h('button',{style:{background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:20,
-          padding:'5px 12px',cursor:'pointer',color:'var(--txt2)',fontSize:15},onClick:()=>setDark(!dark)},dark?'☀️':'🌙')
+          padding:'5px 12px',cursor:'pointer',color:'var(--txt2)',fontSize:15},onClick:()=>setDark(!dark)},dark?'\u2600\uFE0F':'\uD83C\uDF19')
       )
     ),
 
     h('div',{className:'main'},
       h('div',{className:'tab-bar'},
-        tb('screener','📊 Screener'),
-        tb('innstillinger','⚙️ Innstillinger'),
-        tb('posisjoner','💼 Posisjoner'),
-        tb('ordliste','📖 Ordliste')
+        tb('screener','\uD83D\uDCCA Screener'),
+        tb('innstillinger','\u2699\uFE0F Innstillinger'),
+        tb('posisjoner','\uD83D\uDCBC Posisjoner'),
+        tb('ordliste','\uD83D\uDCD6 Ordliste')
       ),
 
       activeTab==='screener'&&h('div',null,
         !loaded&&h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
-          h('div',{style:{fontSize:32,marginBottom:10}},'📊'),
-          loadingBors?h('div',{style:{fontSize:13,color:'var(--txt3)'}},'Laster '+loadingBors+'…'):
+          h('div',{style:{fontSize:32,marginBottom:10}},'\uD83D\uDCCA'),
+          loadingBors?h('div',{style:{fontSize:13,color:'var(--txt3)'}},'Laster '+loadingBors+'\u2026'):
           h('div',null,
             h('div',{style:{fontSize:13,marginBottom:6}},'Konfigurer Web App URLer under '),
             h('span',{style:{color:'var(--acc)',cursor:'pointer',textDecoration:'underline'},
-              onClick:()=>setActiveTab('innstillinger')},'⚙️ Innstillinger')
+              onClick:()=>setActiveTab('innstillinger')},'\u2699\uFE0F Innstillinger')
           )
         ),
         loaded&&h('div',null,
-          error&&h('div',{className:'err'},'⚠ '+error),
+          error&&h('div',{className:'err'},'\u26A0 '+error),
           ok&&h('div',{className:'ok'},ok),
           h('div',{className:'bors-bar'},
-            h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Børs:'),
-            h('button',{className:'ctrl-btn'+(aktivBørs==='ALLE'?' on':''),onClick:()=>setAktivBørs('ALLE')},'🌐 Alle'),
+            h('span',{style:{fontSize:11,color:'var(--txt3)'}},'B\u00F8rs:'),
+            h('button',{className:'ctrl-btn'+(aktivBors==='ALLE'?' on':''),onClick:()=>setAktivBors('ALLE')},'\uD83C\uDF10 Alle'),
             ...EXCHANGES.map(ex=>{
               const count=(allData[ex.id]||[]).length;
               return h('button',{key:ex.id,
-                className:'ctrl-btn'+(aktivBørs===ex.id?' on':''),
-                onClick:()=>setAktivBørs(ex.id),
+                className:'ctrl-btn'+(aktivBors===ex.id?' on':''),
+                onClick:()=>setAktivBors(ex.id),
                 style:{opacity:count>0?1:0.4}},
                 ex.flag+' '+ex.navn+(count?' ('+count+')':'')
               );
             }),
             h('button',{className:'btn-ghost',onClick:lastAlle,style:{marginLeft:'auto'}},
-              loadingBors?'⏳ '+loadingBors+'…':'🔄 Oppdater alle')
+              loadingBors?'\u23F3 '+loadingBors+'\u2026':'\uD83D\uDD04 Oppdater alle')
           ),
           h('div',{style:{display:'flex',gap:7,alignItems:'center',marginBottom:12,flexWrap:'wrap'}},
             h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Min score:'),
@@ -516,25 +554,29 @@ function App(){
               cb('total','Total',setSortBy,sortBy),cb('tt','TT',setSortBy,sortBy),
               cb('rs','RS',setSortBy,sortBy),cb('fund','Fund',setSortBy,sortBy),
               cb('vcp','VCP',setSortBy,sortBy),
-              h('button',{className:'btn-green',onClick:exportTV},'↓ TradingView')
+              h('button',{className:'btn-green',onClick:exportTV},'\u2193 TradingView')
             )
           ),
-          h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:10}},filtered.length+' aksjer · Klikk rad for detaljer'),
+          h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:10}},filtered.length+' aksjer \u00B7 Klikk rad for detaljer'),
           h('div',{style:{overflowX:'auto'}},
             h('table',null,
               h('thead',null,h('tr',null,
                 ['#','Aksje','Kurs','TT','RS','SEPA','Score','VCP',''].map(x=>h('th',{key:x,className:x==='Kurs'?'r':x==="#"?'':'c'},x))
               )),
-              h('tbody',null,filtered.map((a,i)=>h(Rad,{key:a.ticker+a._exchange,aksje:a,rank:i+1,onKalk:setKalkAksje,tvPrefix:a._tvPrefix||'OSLO',openTicker,setOpenTicker})))
+              h('tbody',null,filtered.map((a,i)=>h(Rad,{
+                key:a.ticker+'|'+a._exchange,
+                aksje:a,rank:i+1,onKalk:setKalkAksje,
+                tvPrefix:a._tvPrefix||'OSLO',openTicker,setOpenTicker
+              })))
             )
           ),
-          filtered.length===0&&h('div',{style:{textAlign:'center',padding:30,color:'var(--txt4)'}},'Ingen aksjer med score ≥ '+minScore),
+          filtered.length===0&&h('div',{style:{textAlign:'center',padding:30,color:'var(--txt4)'}},'Ingen aksjer med score \u2265 '+minScore),
           h('div',{className:'guide-grid'},
-            [['1. Velg kandidat','Score ≥ 10, RS ≥ 70. Let etter VCP-mønster i TradingView.'],
-             ['2. Entry','Breakout over pivot på 40-50% over gj.snittlig volum.'],
-             ['3. Posisjonsstørrelse','Maks 1-2% risiko per trade. Bruk Kalk-knappen.'],
+            [['1. Velg kandidat','Score \u2265 10, RS \u2265 70. Let etter VCP-m\u00F8nster i TradingView.'],
+             ['2. Entry','Breakout over pivot p\u00E5 40-50% over gj.snittlig volum.'],
+             ['3. Posisjonsst\u00F8rrelse','Maks 1-2% risiko per trade. Bruk Kalk-knappen.'],
              ['4. Stop-loss','7-8% under inngang. Flytt aldri ned.'],
-             ['5. Target','Min 3:1. Ta delvis ved 2:1, la resten løpe.'],
+             ['5. Target','Min 3:1. Ta delvis ved 2:1, la resten l\u00F8pe.'],
              ['6. Exit','Brudd under stigende MA50 eller distribusjon.'],
             ].map(([t,k])=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},k)))
           )
@@ -542,7 +584,7 @@ function App(){
       ),
 
       activeTab==='innstillinger'&&h('div',{style:{maxWidth:700}},
-        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Web App URLer per børs'),
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Web App URLer per b\u00F8rs'),
         h('div',{className:'info-box'},
           h('strong',{style:{color:'var(--txt2)'}},'Legg til doGet() i hvert Apps Script og deploy som Web App (Alle kan se):'),
           h('pre',{style:{background:'var(--bg3)',border:'1px solid var(--bdr)',borderRadius:6,
@@ -561,20 +603,20 @@ function App(){
 }`)
         ),
         EXCHANGES.map(ex=>h('div',{key:ex.id,style:{marginBottom:14}},
-          h('div',{className:'field-lbl'},ex.flag+' '+ex.navn+' ('+ex.id+') — Web App URL'),
+          h('div',{className:'field-lbl'},ex.flag+' '+ex.navn+' ('+ex.id+') \u2014 Web App URL'),
           h('div',{style:{display:'flex',gap:8}},
             h('input',{type:'url',value:urls[ex.id]||'',
               onChange:e=>setUrls({...urls,[ex.id]:e.target.value}),
-              placeholder:'https://script.google.com/macros/s/…/exec',style:{flex:1}}),
+              placeholder:'https://script.google.com/macros/s/\u2026/exec',style:{flex:1}}),
             h('button',{className:'btn-ghost',disabled:!urls[ex.id],
-              onClick:()=>doLoad(ex.id,urls[ex.id])},loadingBors===ex.id?'Laster…':'Test')
+              onClick:()=>doLoad(ex.id,urls[ex.id])},loadingBors===ex.id?'Laster\u2026':'Test')
           ),
           (allData[ex.id]||[]).length>0&&h('div',{style:{fontSize:11,color:'#22c55e',marginTop:3}},
-            '✓ '+(allData[ex.id]||[]).length+' aksjer cachet')
+            '\u2713 '+(allData[ex.id]||[]).length+' aksjer cachet')
         )),
-        error&&h('div',{className:'err'},'⚠ '+error),
+        error&&h('div',{className:'err'},'\u26A0 '+error),
         ok&&h('div',{className:'ok'},ok),
-        h('button',{className:'btn',onClick:()=>{saveUrls();lastAlle();}},loading?'Laster…':'Lagre og oppdater alle')
+        h('button',{className:'btn',onClick:()=>{saveUrls();lastAlle();}},loading?'Laster\u2026':'Lagre og oppdater alle')
       ),
 
       activeTab==='posisjoner'&&h(Posisjoner,null),
@@ -588,7 +630,7 @@ function App(){
       )
     ),
 
-    kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjøpt:()=>setActiveTab('posisjoner')})
+    kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjopt:()=>setActiveTab('posisjoner')})
   );
 }
 
