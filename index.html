@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Minervini Screener — Norden</title>
+<title>Minervini Screener &mdash; Norden</title>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <style>
@@ -23,8 +23,10 @@ input,textarea,select,button{font-family:inherit;font-size:13px;outline:none;}a{
 .tab:hover:not(.active){border-color:var(--acc);color:var(--txt);}
 .info-box{background:var(--bg2);border:1px solid var(--inp-bdr);border-radius:8px;padding:14px;font-size:12px;color:var(--txt3);line-height:1.8;margin-bottom:14px;}
 .field-lbl{font-size:11px;color:var(--txt3);margin-bottom:4px;}
+.field-hint{font-size:10px;color:var(--txt4);margin-top:-6px;margin-bottom:8px;}
 input[type=text],input[type=url]{width:100%;background:var(--inp);border:1px solid var(--inp-bdr);border-radius:6px;color:var(--txt);padding:9px 12px;font-size:12px;margin-bottom:10px;transition:border-color .15s;}
 input[type=text]:focus,input[type=url]:focus{border-color:var(--acc);}
+input[type=text].inp-highlight{border-color:rgba(59,130,246,.5);background:rgba(59,130,246,.04);}
 textarea{width:100%;background:var(--inp);border:1px solid var(--inp-bdr);border-radius:8px;color:var(--txt);padding:10px;font-size:11px;resize:vertical;margin-bottom:10px;line-height:1.5;}
 textarea:focus{border-color:var(--acc);}
 .btn{background:var(--acc);color:#fff;border:none;border-radius:6px;padding:9px 24px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
@@ -44,7 +46,7 @@ th.r{text-align:right;}th.c{text-align:center;}
 td{padding:9px 12px;border-bottom:1px solid var(--bdr2);vertical-align:middle;}
 tbody tr{cursor:pointer;transition:background .1s;}tbody tr:hover{background:rgba(59,130,246,.06)!important;}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:26px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;}
+.modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:26px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
 .sec-lbl{font-size:9px;color:var(--txt4);letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:7px;}
 .drow{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
 .dk{color:var(--txt3);}.dv{color:var(--txt2);font-variant-numeric:tabular-nums;}
@@ -55,6 +57,7 @@ tbody tr{cursor:pointer;transition:background .1s;}tbody tr:hover{background:rgb
 .guide-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:12px;}
 .g-title{font-size:11px;font-weight:700;color:var(--acc);margin-bottom:5px;}
 .g-text{font-size:11px;color:var(--txt3);line-height:1.7;}
+/* ── Posisjon-kort ────────────────────────────────────── */
 .pos-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:14px;margin-bottom:10px;}
 .pos-ticker{font-size:16px;font-weight:700;color:var(--txt);}
 .pos-name{font-size:11px;color:var(--txt3);}
@@ -63,6 +66,17 @@ tbody tr{cursor:pointer;transition:background .1s;}tbody tr:hover{background:rgb
 .tgt-hit{background:rgba(34,197,94,.15);border-radius:3px;padding:2px 6px;color:#22c55e;font-size:10px;font-weight:700;cursor:pointer;}
 .tgt-open{background:rgba(30,42,60,.5);border-radius:3px;padding:2px 6px;color:var(--txt3);font-size:10px;cursor:pointer;}
 .bors-bar{display:flex;gap:6px;margin-bottom:12px;align-items:center;flex-wrap:wrap;}
+/* ── Edit-panel inne i posisjonskort ─────────────────── */
+.edit-panel{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;padding:12px;margin-bottom:12px;}
+.edit-panel-title{font-size:9px;color:var(--txt4);letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:10px;}
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.edit-field label{display:block;font-size:10px;color:var(--txt3);margin-bottom:3px;}
+.edit-field input{width:100%;background:var(--inp);border:1px solid var(--inp-bdr);border-radius:5px;color:var(--txt);padding:7px 10px;font-size:12px;transition:border-color .15s;}
+.edit-field input:focus{border-color:var(--acc);}
+.edit-note{font-size:10px;color:var(--txt4);margin-bottom:8px;line-height:1.5;}
+/* ── Kalkulator: inngangsfelt highlight ───────────────── */
+.kalk-inngang-wrap{position:relative;margin-bottom:10px;}
+.kalk-inngang-wrap .badge-lastprice{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:9px;background:rgba(59,130,246,.15);color:var(--acc);border:1px solid rgba(59,130,246,.3);border-radius:3px;padding:2px 5px;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -76,10 +90,10 @@ const LS={
 };
 
 const EXCHANGES=[
-  {id:'OSL',navn:'Oslo',      flag:'\u{1F1F3}\u{1F1F4}',suffix:'.OL', tv:'OSLO',    valuta:'NOK'},
-  {id:'STO',navn:'Stockholm', flag:'\u{1F1F8}\u{1F1EA}',suffix:'.ST', tv:'OMXSTO',  valuta:'SEK'},
-  {id:'CPH',navn:'K\u00F8benhavn', flag:'\u{1F1E9}\u{1F1F0}',suffix:'.CO', tv:'OMXCOP',  valuta:'DKK'},
-  {id:'HEL',navn:'Helsinki',  flag:'\u{1F1EB}\u{1F1EE}',suffix:'.HE', tv:'OMXHEX',  valuta:'EUR'},
+  {id:'OSL',navn:'Oslo',      flag:'\uD83C\uDDF3\uD83C\uDDF4',suffix:'.OL',tv:'OSLO',   valuta:'NOK'},
+  {id:'STO',navn:'Stockholm', flag:'\uD83C\uDDF8\uD83C\uDDEA',suffix:'.ST',tv:'OMXSTO', valuta:'SEK'},
+  {id:'CPH',navn:'K\u00F8benhavn',flag:'\uD83C\uDDE9\uD83C\uDDF0',suffix:'.CO',tv:'OMXCOP',valuta:'DKK'},
+  {id:'HEL',navn:'Helsinki',  flag:'\uD83C\uDDEB\uD83C\uDDEE',suffix:'.HE',tv:'OMXHEX', valuta:'EUR'},
 ];
 
 const GLOSS=[
@@ -117,130 +131,351 @@ function parseRows(rows){
   }).filter(Boolean);
 }
 
-function beregnPos(p,nyInngang){
-  const inn=nyInngang!=null?nyInngang:p.inngang;
-  const stop=+(inn*(1-p.sPst/100)).toFixed(2);
-  const antall=inn>0?Math.floor(p.riskKr/(inn-stop)):p.antall;
-  const totInv=+(antall*inn).toFixed(0);
-  return{...p,inngang:inn,stop,antall,totInv,
-    t2:+(inn*(1+p.sPst*2/100)).toFixed(2),
-    t3:+(inn*(1+p.sPst*3/100)).toFixed(2),
-    t4:+(inn*(1+p.sPst*4/100)).toFixed(2)};
+// ─── Beregner alle avledede verdier for en posisjon ──────────────────────────
+// nyInngang: overstyr inngangskurs
+// nyAntall:  overstyr antall aksjer direkte (skippar riskKr-beregning)
+function beregnPos(p, nyInngang, nyAntall) {
+  const inn  = nyInngang != null ? nyInngang : p.inngang;
+  const stop = +(inn * (1 - p.sPst / 100)).toFixed(2);
+
+  let antall, riskKr;
+  if (nyAntall != null) {
+    // Manuelt antall — riskKr oppdateres til faktisk risiko
+    antall  = nyAntall;
+    riskKr  = inn > stop ? +(antall * (inn - stop)).toFixed(0) : 0;
+  } else {
+    // Beregnes fra risikoprosent (standard)
+    riskKr  = p.riskKr;
+    antall  = inn > stop ? Math.floor(riskKr / (inn - stop)) : p.antall;
+  }
+
+  const totInv = +(antall * inn).toFixed(0);
+  return {
+    ...p, inngang: inn, stop, antall, totInv, riskKr,
+    t2: +(inn * (1 + p.sPst * 2 / 100)).toFixed(2),
+    t3: +(inn * (1 + p.sPst * 3 / 100)).toFixed(2),
+    t4: +(inn * (1 + p.sPst * 4 / 100)).toFixed(2),
+  };
 }
 
-function Kalkulator({aksje,onClose,onKjopt}){
-  const [konto,setKonto]=useState(()=>LS.get('kalk_konto','100000'));
-  const [rPst,setRPst]=useState(()=>LS.get('kalk_risiko','1'));
-  const [sPst,setSPst]=useState(()=>LS.get('kalk_stop','8'));
-  const [dato,setDato]=useState(new Date().toISOString().split('T')[0]);
-  useEffect(()=>{LS.set('kalk_konto',konto);LS.set('kalk_risiko',rPst);LS.set('kalk_stop',sPst);},[konto,rPst,sPst]);
-  const kR=parseFloat(konto)||0,rP=parseFloat(rPst)||1,sP=parseFloat(sPst)||8;
-  const inn=aksje.price||0,stop=+(inn*(1-sP/100)).toFixed(2);
-  const riskKr=+(kR*(rP/100)).toFixed(0),antall=inn>0?Math.floor(riskKr/(inn-stop)):0;
-  const totInv=+(antall*inn).toFixed(0);
-  const t2=+(inn*(1+sP*2/100)).toFixed(2),t3=+(inn*(1+sP*3/100)).toFixed(2),t4=+(inn*(1+sP*4/100)).toFixed(2);
-  const fld=(lbl,val,set)=>h('div',{key:lbl,style:{marginBottom:10}},
-    h('div',{className:'field-lbl'},lbl),
-    h('input',{type:'text',value:val,onChange:e=>set(e.target.value),
+// ─── Kalkulator-modal ────────────────────────────────────────────────────────
+function Kalkulator({aksje, onClose, onKjopt}) {
+  const [konto, setKonto]       = useState(() => LS.get('kalk_konto',  '100000'));
+  const [rPst,  setRPst]        = useState(() => LS.get('kalk_risiko', '1'));
+  const [sPst,  setSPst]        = useState(() => LS.get('kalk_stop',   '8'));
+  const [dato,  setDato]        = useState(new Date().toISOString().split('T')[0]);
+
+  // Inngangskurs: forhåndsutfylt med siste sluttkurs, men redigerbar
+  const lastPrice = aksje.price || 0;
+  const [inngKurs, setInngKurs] = useState(String(lastPrice > 0 ? lastPrice : ''));
+  const inngChanged = parseFloat(inngKurs.replace(',','.')) !== lastPrice;
+
+  useEffect(() => {
+    LS.set('kalk_konto', konto);
+    LS.set('kalk_risiko', rPst);
+    LS.set('kalk_stop', sPst);
+  }, [konto, rPst, sPst]);
+
+  const kR  = parseFloat(konto)  || 0;
+  const rP  = parseFloat(rPst)   || 1;
+  const sP  = parseFloat(sPst)   || 8;
+  const inn = parseFloat(inngKurs.replace(',','.')) || lastPrice || 0;
+
+  const stop   = +(inn * (1 - sP / 100)).toFixed(2);
+  const riskKr = +(kR * (rP / 100)).toFixed(0);
+  const antall = inn > stop ? Math.floor(riskKr / (inn - stop)) : 0;
+  const totInv = +(antall * inn).toFixed(0);
+  const t2 = +(inn * (1 + sP * 2 / 100)).toFixed(2);
+  const t3 = +(inn * (1 + sP * 3 / 100)).toFixed(2);
+  const t4 = +(inn * (1 + sP * 4 / 100)).toFixed(2);
+
+  const fld = (lbl, val, set, opts={}) => h('div', {key: lbl, style:{marginBottom:10}},
+    h('div', {className:'field-lbl'}, lbl),
+    opts.hint ? h('div', {className:'field-hint'}, opts.hint) : null,
+    h('input', {
+      type:'text', value:val,
+      onChange: e => set(e.target.value),
+      className: opts.highlight ? 'inp-highlight' : '',
       style:{background:'var(--inp)',border:'1px solid var(--inp-bdr)',borderRadius:6,
-             color:'var(--txt)',padding:'8px 12px',width:'100%'}})
+             color:'var(--txt)',padding:'8px 12px',width:'100%',
+             ...(opts.highlight ? {borderColor:'rgba(59,130,246,.6)',background:'rgba(59,130,246,.04)'} : {})}
+    })
   );
-  const row=(lbl,val,hi)=>h('div',{className:'drow',style:hi?{fontWeight:700}:{}},
-    h('span',{className:'dk'},lbl),h('span',{className:'dv',style:hi?{color:'#22c55e'}:{}},val)
+
+  const row = (lbl, val, hi, muted) => h('div', {className:'drow', style: hi ? {fontWeight:700} : {}},
+    h('span', {className:'dk'}, lbl),
+    h('span', {className:'dv', style: hi ? {color:'#22c55e'} : muted ? {color:'var(--txt4)'} : {}}, val)
   );
-  const doKjopt=()=>{
-    const pos={id:Date.now(),ticker:aksje.ticker,name:aksje.name,
-      inngang:inn,stop,antall,totInv,riskKr,rPst:rP,sPst:sP,dato,t2,t3,t4,
-      hitT2:false,hitT3:false,hitT4:false,hitStop:false};
-    LS.set('posisjoner',[...LS.get('posisjoner',[]),pos]);
-    onKjopt&&onKjopt();onClose();
+
+  const doKjopt = () => {
+    if (!inn || inn <= 0) return;
+    const pos = {
+      id: Date.now(), ticker: aksje.ticker, name: aksje.name,
+      inngang: inn, stop, antall, totInv, riskKr, rPst: rP, sPst: sP, dato,
+      t2, t3, t4, hitT2: false, hitT3: false, hitT4: false, hitStop: false,
+    };
+    LS.set('posisjoner', [...LS.get('posisjoner', []), pos]);
+    onKjopt && onKjopt();
+    onClose();
   };
-  return h('div',{className:'modal-bg',onClick:onClose},
-    h('div',{className:'modal',onClick:e=>e.stopPropagation()},
-      h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}},
-        h('div',null,h('div',{style:{fontSize:18,fontWeight:700,color:'var(--txt)'}},aksje.ticker),
-          h('div',{style:{fontSize:11,color:'var(--txt3)'}},aksje.name)),
-        h('button',{style:{background:'none',border:'none',color:'var(--txt3)',fontSize:22,cursor:'pointer'},onClick:onClose},'\u2715')
+
+  const sym = aksje.ticker.replace(/\.(OL|ST|CO|HE)$/, '');
+
+  return h('div', {className:'modal-bg', onClick:onClose},
+    h('div', {className:'modal', onClick:e=>e.stopPropagation()},
+
+      // Header
+      h('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:18}},
+        h('div', null,
+          h('div', {style:{fontSize:18,fontWeight:700,color:'var(--txt)'}}, sym),
+          h('div', {style:{fontSize:11,color:'var(--txt3)'}}, aksje.name),
+        ),
+        h('button', {style:{background:'none',border:'none',color:'var(--txt3)',fontSize:22,cursor:'pointer'},onClick:onClose}, '\u2715')
       ),
-      fld('Kontobalanse',konto,setKonto),fld('Risiko (%)',rPst,setRPst),fld('Stop-loss (%)',sPst,setSPst),fld('Dato',dato,setDato),
-      h('div',{style:{background:'var(--bg3)',borderRadius:8,padding:14,marginBottom:14}},
-        row('Inngangskurs',inn.toFixed(2)),row('Stop-kurs',stop+' (\u2212'+sP+'%)'),
-        row('Risiko',riskKr.toLocaleString('nb-NO')+' ('+rP+'%)'),
-        row('Antall aksjer',antall.toLocaleString('nb-NO')),
-        row('Total investering',totInv.toLocaleString('nb-NO')),
-        h('div',{style:{borderTop:'1px solid var(--bdr2)',margin:'8px 0'}}),
-        row('Target 2:1 (+'+(sP*2).toFixed(0)+'%)',t2.toFixed(2)),
-        row('Target 3:1 (+'+(sP*3).toFixed(0)+'%)',t3.toFixed(2)),
-        row('Target 4:1 (+'+(sP*4).toFixed(0)+'%)',t4.toFixed(2),true)
+
+      // ── Inngangskurs (ny, redigerbar) ──
+      h('div', {style:{marginBottom:10}},
+        h('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:4}},
+          h('div', {className:'field-lbl'}, 'Inngangskurs'),
+          lastPrice > 0
+            ? h('span', {
+                style:{fontSize:10,color: inngChanged ? '#f97316' : 'var(--acc)',cursor:'pointer',
+                       background: inngChanged ? 'rgba(249,115,22,.1)' : 'var(--acc-bg)',
+                       border:`1px solid ${inngChanged ? 'rgba(249,115,22,.3)' : 'var(--acc)'}`,
+                       borderRadius:3, padding:'1px 6px'},
+                onClick: () => setInngKurs(String(lastPrice)),
+              }, inngChanged ? '\u21BA tilbakestill til ' + lastPrice.toFixed(2) : 'Siste kurs: ' + lastPrice.toFixed(2))
+            : null,
+        ),
+        h('input', {
+          type:'text', value:inngKurs,
+          onChange: e => setInngKurs(e.target.value),
+          style:{background:'var(--inp)',border:`1px solid ${inngChanged?'#f97316':'rgba(59,130,246,.5)'}`,
+                 borderRadius:6,color:'var(--txt)',padding:'9px 12px',width:'100%',
+                 background: inngChanged ? 'rgba(249,115,22,.04)' : 'rgba(59,130,246,.04)'},
+          placeholder:'Skriv inn \u00F8nsket kurs (f.eks. pivot)'
+        }),
+        inngChanged
+          ? h('div', {style:{fontSize:10,color:'#f97316',marginTop:-6,marginBottom:8}},
+              '\u26A0 Avviker fra siste kurs (' + lastPrice.toFixed(2) + ')')
+          : h('div', {style:{fontSize:10,color:'var(--txt4)',marginTop:-6,marginBottom:8}},
+              'Juster til planlagt pivot dersom over siste kurs'),
       ),
-      h('div',{style:{display:'flex',gap:8}},
-        h('button',{className:'btn',style:{background:'#16a34a'},onClick:doKjopt},'\u2713 Registrer kj\u00F8p'),
-        h('button',{className:'btn-ghost',onClick:onClose},'Avbryt')
-      )
+
+      // Divider
+      h('div', {style:{borderTop:'1px solid var(--bdr2)',margin:'4px 0 12px'}}),
+
+      // Kontoinnstillinger
+      fld('Kontobalanse', konto, setKonto),
+      fld('Risiko (%)', rPst, setRPst),
+      fld('Stop-loss (%)', sPst, setSPst),
+      fld('Dato', dato, setDato),
+
+      // Resultat-boks
+      h('div', {style:{background:'var(--bg3)',borderRadius:8,padding:14,marginBottom:16}},
+        h('div', {className:'sec-lbl', style:{marginBottom:8}}, 'Beregnet posisjon'),
+        row('Inngangskurs', inn.toFixed(2)),
+        row('Stop-kurs', stop.toFixed(2) + ' (\u2212' + sP + '%)'),
+        row('Risiko kr', riskKr.toLocaleString('nb-NO') + ' (' + rP + '%)'),
+        row('Antall aksjer', antall.toLocaleString('nb-NO')),
+        row('Total investering', totInv.toLocaleString('nb-NO')),
+        h('div', {style:{borderTop:'1px solid var(--bdr2)',margin:'8px 0'}}),
+        row('Target 2:1 (+' + (sP*2).toFixed(0) + '%)', t2.toFixed(2)),
+        row('Target 3:1 (+' + (sP*3).toFixed(0) + '%)', t3.toFixed(2)),
+        row('Target 4:1 (+' + (sP*4).toFixed(0) + '%)', t4.toFixed(2), true),
+      ),
+
+      // Knapper
+      h('div', {style:{display:'flex',gap:8}},
+        h('button', {
+          className:'btn', style:{background:'#16a34a', opacity: inn>0?1:.4},
+          disabled: inn<=0,
+          onClick: doKjopt,
+        }, '\u2713 Registrer kj\u00F8p'),
+        h('button', {className:'btn-ghost', onClick:onClose}, 'Avbryt'),
+      ),
     )
   );
 }
 
-function PosKort({p,onToggle,onFjern,onOppdater}){
-  const [red,setRed]=useState(false);
-  const [tmp,setTmp]=useState(String(p.inngang));
-  const lagre=()=>{const ny=parseFloat(tmp.replace(',','.'));if(!isNaN(ny)&&ny>0)onOppdater(p.id,ny);setRed(false);};
-  const cap=f=>f.charAt(0).toUpperCase()+f.slice(1);
-  return h('div',{className:'pos-card'},
-    h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}},
-      h('div',null,
-        h('span',{className:'pos-ticker'},p.ticker.replace(/\.(OL|ST|CO|HE)$/,''),' '),
-        h('span',{className:'pos-name'},p.name),
-        h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:2}},p.dato+' \u00B7 '+p.antall+' aksjer \u00B7 '+p.totInv.toLocaleString('nb-NO'))
+// ─── Posisjonskort ────────────────────────────────────────────────────────────
+function PosKort({p, onToggle, onFjern, onOppdater}) {
+  const [red, setRed]         = useState(false);
+  const [tmpInn, setTmpInn]   = useState(String(p.inngang));
+  const [tmpAnt, setTmpAnt]   = useState(String(p.antall));
+
+  // Forhåndsvis beregnet stop/targets basert på felt under redigering
+  const prevInn = parseFloat(tmpInn.replace(',','.'));
+  const prevAnt = parseInt(tmpAnt, 10);
+  const innOK   = !isNaN(prevInn) && prevInn > 0;
+  const antOK   = !isNaN(prevAnt) && prevAnt > 0;
+
+  // Live preview av hva som vil lagres
+  const preview = useMemo(() => {
+    if (!innOK) return null;
+    const inn  = prevInn;
+    const stop = +(inn * (1 - p.sPst / 100)).toFixed(2);
+    const ant  = antOK ? prevAnt : Math.floor(p.riskKr / (inn - stop));
+    return {
+      stop,
+      antall:  ant,
+      totInv:  +(ant * inn).toFixed(0),
+      riskKr:  antOK ? +(ant * (inn - stop)).toFixed(0) : p.riskKr,
+      t2: +(inn * (1 + p.sPst * 2 / 100)).toFixed(2),
+      t3: +(inn * (1 + p.sPst * 3 / 100)).toFixed(2),
+      t4: +(inn * (1 + p.sPst * 4 / 100)).toFixed(2),
+    };
+  }, [tmpInn, tmpAnt, p.sPst, p.riskKr]);
+
+  const lagre = () => {
+    const nyInn = innOK ? prevInn : null;
+    const nyAnt = antOK && prevAnt !== p.antall ? prevAnt : null;
+    if (nyInn !== null || nyAnt !== null) {
+      onOppdater(p.id, nyInn, nyAnt);
+    }
+    setRed(false);
+  };
+
+  const avbryt = () => {
+    setTmpInn(String(p.inngang));
+    setTmpAnt(String(p.antall));
+    setRed(false);
+  };
+
+  const cap = f => f.charAt(0).toUpperCase() + f.slice(1);
+
+  return h('div', {className:'pos-card'},
+    // Header
+    h('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}},
+      h('div', null,
+        h('span', {className:'pos-ticker'}, p.ticker.replace(/\.(OL|ST|CO|HE)$/, ''), ' '),
+        h('span', {className:'pos-name'}, p.name),
+        h('div', {style:{fontSize:11,color:'var(--txt4)',marginTop:2}},
+          p.dato + ' \u00B7 ' + p.antall + ' aksjer \u00B7 ' + p.totInv.toLocaleString('nb-NO')),
       ),
-      h('div',{style:{display:'flex',gap:6}},
-        h('button',{className:'btn-ghost',style:{fontSize:10,padding:'3px 8px'},onClick:()=>{setRed(!red);setTmp(String(p.inngang));}},red?'Avbryt':'\u270F\uFE0F Juster'),
-        h('button',{className:'btn-red',onClick:()=>onFjern(p.id)},'\u2715')
-      )
+      h('div', {style:{display:'flex',gap:6}},
+        h('button', {
+          className: 'btn-ghost',
+          style:{fontSize:10,padding:'3px 8px', ...(red?{borderColor:'var(--acc)',color:'var(--acc)'}:{})},
+          onClick: () => red ? avbryt() : setRed(true),
+        }, red ? 'Avbryt' : '\u270F\uFE0F Juster'),
+        h('button', {className:'btn-red', onClick:()=>onFjern(p.id)}, '\u2715'),
+      ),
     ),
-    red&&h('div',{style:{background:'var(--bg3)',borderRadius:6,padding:10,marginBottom:10,display:'flex',gap:8,alignItems:'center'}},
-      h('div',{style:{fontSize:11,color:'var(--txt3)',minWidth:110}},'Ny inngangskurs:'),
-      h('input',{type:'text',value:tmp,onChange:e=>setTmp(e.target.value),
-        onKeyDown:e=>e.key==='Enter'&&lagre(),
-        style:{width:100,background:'var(--inp)',border:'1px solid var(--inp-bdr)',borderRadius:5,color:'var(--txt)',padding:'5px 8px',fontSize:12}}),
-      h('button',{className:'btn',style:{padding:'5px 12px',fontSize:11},onClick:lagre},'Oppdater')
+
+    // ── Redigeringspanel ──
+    red && h('div', {className:'edit-panel'},
+      h('div', {className:'edit-panel-title'}, 'Juster posisjon'),
+      h('div', {className:'edit-grid'},
+        // Inngangskurs
+        h('div', {className:'edit-field'},
+          h('label', null, 'Inngangskurs'),
+          h('input', {
+            type:'text', value:tmpInn,
+            onChange: e => setTmpInn(e.target.value),
+            onKeyDown: e => e.key==='Enter' && lagre(),
+          }),
+        ),
+        // Antall aksjer
+        h('div', {className:'edit-field'},
+          h('label', null, 'Antall aksjer'),
+          h('input', {
+            type:'text', value:tmpAnt,
+            onChange: e => setTmpAnt(e.target.value),
+            onKeyDown: e => e.key==='Enter' && lagre(),
+          }),
+        ),
+      ),
+      // Live preview
+      preview && h('div', {style:{background:'var(--bg2)',borderRadius:5,padding:'8px 10px',marginBottom:8,fontSize:11}},
+        h('div', {style:{color:'var(--txt4)',marginBottom:4,fontSize:10}}, 'Forhåndsvisning etter lagring:'),
+        h('div', {style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'4px 12px'}},
+          [
+            ['Stop', preview.stop.toFixed(2)],
+            ['Antall', preview.antall.toLocaleString('nb-NO')],
+            ['Investering', preview.totInv.toLocaleString('nb-NO')],
+            ['Target 2:1', preview.t2.toFixed(2)],
+            ['Target 3:1', preview.t3.toFixed(2)],
+            ['Target 4:1', preview.t4.toFixed(2)],
+          ].map(([l,v]) => h('div', {key:l, style:{color:'var(--txt3)'}},
+            h('span', {style:{color:'var(--txt4)',marginRight:4}}, l+':'),
+            h('span', {style:{color:'var(--txt2)',fontFamily:'monospace'}}, v),
+          ))
+        ),
+      ),
+      h('div', {className:'edit-note'},
+        'Endre inngang recalkulerer stop, targets og risiko-kr automatisk. \u00B7 Endre antall overstyrer posisjonst\u00F8rrelse direkte.'),
+      h('div', {style:{display:'flex',gap:6}},
+        h('button', {
+          className:'btn', style:{padding:'6px 16px',fontSize:11},
+          onClick:lagre, disabled:!innOK,
+        }, 'Lagre'),
+        h('button', {className:'btn-ghost', onClick:avbryt}, 'Avbryt'),
+      ),
     ),
-    h('div',{className:'target-row'},h('span',{style:{color:'var(--txt3)',minWidth:90,fontSize:11}},'Inngang'),h('span',{style:{fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},p.inngang.toFixed(2))),
+
+    // ── Rader: inngang / stop / targets ──
+    h('div',{className:'target-row'},
+      h('span',{style:{color:'var(--txt3)',minWidth:90,fontSize:11}},'Inngang'),
+      h('span',{style:{fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},p.inngang.toFixed(2)),
+      h('span',{style:{fontSize:10,color:'var(--txt4)',marginLeft:'auto'}},
+        p.antall + ' stk \u00B7 ' + p.totInv.toLocaleString('nb-NO')),
+    ),
     h('div',{className:'target-row'},
       h('span',{style:{color:'#f87171',minWidth:90,fontSize:11}},'Stop \u2212'+p.sPst+'%'),
       h('span',{style:{color:'#f87171',fontFamily:'monospace'}},p.stop.toFixed(2)),
-      h('span',{className:p.hitStop?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hitStop')},p.hitStop?'STOPET':'aktiv')
+      h('span',{style:{fontSize:10,color:'var(--txt4)',marginLeft:'auto'}},
+        'risiko '+p.riskKr.toLocaleString('nb-NO')),
+      h('span',{className:p.hitStop?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hitStop')},
+        p.hitStop?'STOPET':'aktiv'),
     ),
     [['t2','2:1'],['t3','3:1'],['t4','4:1']].map(([f,lbl])=>
       h('div',{key:f,className:'target-row'},
         h('span',{style:{color:'#22c55e',minWidth:90,fontSize:11}},'Target '+lbl),
         h('span',{style:{color:'#22c55e',fontFamily:'monospace'}},p[f].toFixed(2)),
-        h('span',{className:p['hit'+cap(f)]?'tgt-hit':'tgt-open',onClick:()=>onToggle(p.id,'hit'+cap(f))},p['hit'+cap(f)]?'\u2713 N\u00E5dd':'\u00E5pen')
+        h('span',{className:p['hit'+cap(f)]?'tgt-hit':'tgt-open',
+          onClick:()=>onToggle(p.id,'hit'+cap(f))},
+          p['hit'+cap(f)]?'\u2713 N\u00E5dd':'\u00E5pen'),
       )
-    )
+    ),
   );
 }
 
-function Posisjoner(){
-  const [pos,setPos]=useState(()=>LS.get('posisjoner',[]));
-  const toggle=(id,f)=>{const u=pos.map(p=>p.id===id?{...p,[f]:!p[f]}:p);setPos(u);LS.set('posisjoner',u);};
-  const fjern=(id)=>{if(!confirm('Fjerne posisjon?'))return;const u=pos.filter(p=>p.id!==id);setPos(u);LS.set('posisjoner',u);};
-  const oppdater=(id,ny)=>{const u=pos.map(p=>p.id===id?beregnPos(p,ny):p);setPos(u);LS.set('posisjoner',u);};
-  if(!pos.length)return h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
+// ─── Posisjoner-side ──────────────────────────────────────────────────────────
+function Posisjoner() {
+  const [pos, setPos] = useState(() => LS.get('posisjoner', []));
+
+  const toggle = (id, f) => {
+    const u = pos.map(p => p.id===id ? {...p,[f]:!p[f]} : p);
+    setPos(u); LS.set('posisjoner', u);
+  };
+  const fjern = id => {
+    if (!confirm('Fjerne posisjon?')) return;
+    const u = pos.filter(p => p.id !== id);
+    setPos(u); LS.set('posisjoner', u);
+  };
+  const oppdater = (id, nyInngang, nyAntall) => {
+    const u = pos.map(p => p.id===id ? beregnPos(p, nyInngang, nyAntall) : p);
+    setPos(u); LS.set('posisjoner', u);
+  };
+
+  if (!pos.length) return h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
     h('div',{style:{fontSize:28,marginBottom:10}},'\uD83D\uDCCB'),
     h('div',{style:{fontSize:13}},'Ingen registrerte posisjoner enn\u00E5.'),
-    h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:6}},'Bruk "Kalk"-knappen og trykk "Registrer kj\u00F8p"')
+    h('div',{style:{fontSize:11,color:'var(--txt4)',marginTop:6}},'Bruk "Kalk"-knappen og trykk "Registrer kj\u00F8p"'),
   );
-  return h('div',null,
-    h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:14}},pos.length+' posisjoner \u00B7 Klikk target for \u00E5 markere \u00B7 \u270F\uFE0F Juster for \u00E5 endre inngang'),
-    pos.map(p=>h(PosKort,{key:p.id,p,onToggle:toggle,onFjern:fjern,onOppdater:oppdater}))
+
+  return h('div', null,
+    h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:14}},
+      pos.length + ' posisjoner \u00B7 Klikk target for \u00E5 markere \u00B7 \u270F\uFE0F Juster for \u00E5 endre inngang og antall'),
+    pos.map(p => h(PosKort,{key:p.id,p,onToggle:toggle,onFjern:fjern,onOppdater:oppdater})),
   );
 }
 
 const TT_LABELS=['Pris > MA50','Pris > MA150','Pris > MA200','MA50 > MA150','MA150 > MA200','MA200 \u2191','\u226525% fra topp','RS \u2265 70'];
 
+// ─── Screener-rad ─────────────────────────────────────────────────────────────
 function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
-  // Bruker ticker|_exchange som unik ID for expanded-state
   const rowId=aksje.ticker+'|'+aksje._exchange;
   const open=openTicker===rowId;
   const toggle=()=>setOpenTicker(open?null:rowId);
@@ -261,46 +496,35 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
       h('td',null,h('span',{style:{color:'var(--txt4)',fontSize:11}},'#'+rank)),
       h('td',null,
         h('div',{style:{fontWeight:700,color:'var(--txt)',fontSize:14}},sym),
-        h('div',{style:{fontSize:11,color:'var(--txt3)',maxWidth:140,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},aksje.name)
-      ),
+        h('div',{style:{fontSize:11,color:'var(--txt3)',maxWidth:140,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},aksje.name)),
       h('td',{style:{textAlign:'right'}},
         h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',fontFamily:'monospace'}},aksje.price!=null?aksje.price.toFixed(2):'\u2014'),
-        aksje.high52&&aksje.price?h('div',{style:{fontSize:10,color:'var(--txt4)'}},((aksje.price/aksje.high52)*100).toFixed(0)+'% av topp'):null
-      ),
+        aksje.high52&&aksje.price?h('div',{style:{fontSize:10,color:'var(--txt4)'}},((aksje.price/aksje.high52)*100).toFixed(0)+'% av topp'):null),
       h('td',{style:{textAlign:'center'}},
         h('div',{style:{display:'inline-flex',alignItems:'center',justifyContent:'center',
-          width:36,height:36,borderRadius:'50%',border:`2px solid ${tc}`,color:tc,fontSize:15,fontWeight:700}},tt)
-      ),
+          width:36,height:36,borderRadius:'50%',border:`2px solid ${tc}`,color:tc,fontSize:15,fontWeight:700}},tt)),
       h('td',{style:{textAlign:'center'}},
         rs!=null?h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:3}},
           h('div',{style:{fontSize:13,fontWeight:700,color:rs>=80?'#22c55e':rs>=70?'#84cc16':rs>=50?'#eab308':'var(--txt3)'}},Math.round(rs)),
           h('div',{style:{width:36,height:3,background:'var(--bdr)',borderRadius:2}},
             h('div',{style:{height:'100%',borderRadius:2,width:rs+'%',background:rs>=80?'#22c55e':rs>=70?'#84cc16':'#eab308'}}))
-        ):h('span',{style:{color:'var(--txt4)'}},'\u2014')
-      ),
+        ):h('span',{style:{color:'var(--txt4)'}},'\u2014')),
       h('td',{style:{textAlign:'center'}},sep('NI',aksje.sepaEps),sep('Rev',aksje.sepaRev),sep('ROE',aksje.sepaRoe),sep('Marg',aksje.sepaMarg)),
       h('td',{style:{textAlign:'center'}},
         h('div',{className:'ring',style:{background:`conic-gradient(${rc} ${(total/12)*360}deg, var(--bdr) 0deg)`}},
-          h('div',{className:'ring-in',style:{color:rc}},total))
-      ),
+          h('div',{className:'ring-in',style:{color:rc}},total))),
       h('td',{style:{textAlign:'center'}},
         aksje.vcpScore!=null
           ?h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:2}},
-              h('div',{style:{fontSize:13,fontWeight:700,
-                color:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}},
-                aksje.vcpScore),
+              h('div',{style:{fontSize:13,fontWeight:700,color:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}},aksje.vcpScore),
               h('div',{style:{width:36,height:3,background:'var(--bdr)',borderRadius:2}},
-                h('div',{style:{height:'100%',borderRadius:2,width:(aksje.vcpScore*10)+'%',
-                  background:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}})),
-              aksje.vcpDetaljer?h('div',{style:{fontSize:9,color:'var(--txt4)',marginTop:1,whiteSpace:'nowrap'}},aksje.vcpDetaljer):null
-            )
-          :h('span',{style:{color:'var(--txt4)'}},'\u2014')
-      ),
+                h('div',{style:{height:'100%',borderRadius:2,width:(aksje.vcpScore*10)+'%',background:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt3)'}})),
+              aksje.vcpDetaljer?h('div',{style:{fontSize:9,color:'var(--txt4)',marginTop:1,whiteSpace:'nowrap'}},aksje.vcpDetaljer):null)
+          :h('span',{style:{color:'var(--txt4)'}},'\u2014')),
       h('td',{style:{textAlign:'center'}},
-        h('button',{onClick:e=>{e.stopPropagation();onKalk(aksje);},style:{
-          background:'var(--acc-bg)',border:'1px solid var(--acc)',borderRadius:5,
-          color:'var(--acc)',fontSize:11,padding:'4px 8px',cursor:'pointer'}},'Kalk')
-      )
+        h('button',{onClick:e=>{e.stopPropagation();onKalk(aksje);},
+          style:{background:'var(--acc-bg)',border:'1px solid var(--acc)',borderRadius:5,
+                 color:'var(--acc)',fontSize:11,padding:'4px 8px',cursor:'pointer'}},'Kalk'))
     )
   ];
   if(open)rows.push(h('tr',{key:'d',style:{background:'var(--bg3)'}},
@@ -312,47 +536,35 @@ function Rad({aksje,rank,onKalk,tvPrefix,openTicker,setOpenTicker}){
             h('div',{key:l,className:'drow'},
               h('span',{className:'dk'},l),
               h('span',{className:'dv'},v!=null?v.toFixed(2):'\u2014',
-                v!=null&&aksje.price!=null?h('span',{style:{color:aksje.price>v?'#22c55e':'#f87171',marginLeft:4}},aksje.price>v?'\u25B2':'\u25BC'):null)
-            )
-          )
-        ),
+                v!=null&&aksje.price!=null?h('span',{style:{color:aksje.price>v?'#22c55e':'#f87171',marginLeft:4}},aksje.price>v?'\u25B2':'\u25BC'):null)))),
         h('div',null,
           h('div',{className:'sec-lbl'},'Trend Template'),
           TT_LABELS.map((l,i)=>h('div',{key:l,style:{display:'flex',gap:5,alignItems:'center',fontSize:11,marginBottom:3}},
             h('span',{style:{color:ttFl[i]==='JA'?'#22c55e':'#f87171'}},ttFl[i]==='JA'?'\u2713':'\u2717'),
-            h('span',{style:{color:'var(--txt3)'}},l)
-          ))
-        ),
+            h('span',{style:{color:'var(--txt3)'}},l)))),
         h('div',null,
           h('div',{className:'sec-lbl'},'Fundamental'),
           [['NI-vekst YoY',aksje.niVekst],['Rev-vekst YoY',aksje.revVekst],['ROE',aksje.roe],['Nettomarg.',aksje.netMarg]].map(([l,v])=>
-            h('div',{key:l,className:'drow'},h('span',{className:'dk'},l),h('span',{className:'dv'},v!=null?v.toFixed(1)+'%':'\u2014'))
-          )
-        ),
+            h('div',{key:l,className:'drow'},h('span',{className:'dk'},l),h('span',{className:'dv'},v!=null?v.toFixed(1)+'%':'\u2014')))),
         h('div',null,
           h('div',{className:'sec-lbl'},'VCP-m\u00F8nster'),
-          h('div',{className:'drow'},
-            h('span',{className:'dk'},'Score'),
+          h('div',{className:'drow'},h('span',{className:'dk'},'Score'),
             h('span',{className:'dv',style:{color:aksje.vcpScore>=7?'#22c55e':aksje.vcpScore>=4?'#eab308':'var(--txt2)'}},
-              aksje.vcpScore!=null?aksje.vcpScore+' / 10':'\u2014')
-          ),
+              aksje.vcpScore!=null?aksje.vcpScore+' / 10':'\u2014')),
           h('div',{className:'drow'},h('span',{className:'dk'},'Faser'),h('span',{className:'dv'},aksje.vcpDetaljer||'\u2014')),
-          h('div',{style:{marginTop:6,fontSize:10,color:'var(--txt4)',lineHeight:1.6}},
-            'H\u00F8y score = progressivt synkende drawdowns + t\u00F8rkende volum + n\u00E6r pivot. Verifiser alltid i TradingView.')
-        )
+          h('div',{style:{marginTop:6,fontSize:10,color:'var(--txt4)',lineHeight:1.6}},'H\u00F8y score = progressivt synkende drawdowns + t\u00F8rkende volum + n\u00E6r pivot. Verifiser alltid i TradingView.'))
       ),
       h('div',{style:{padding:'4px 14px 14px',display:'flex',gap:8,alignItems:'center'}},
         h('a',{href:'https://www.tradingview.com/chart/?symbol='+tvPrefix+'%3A'+tvSym,
           target:'_blank',rel:'noopener noreferrer',
           style:{fontSize:12,color:'var(--acc)',textDecoration:'none',background:'var(--acc-bg)',
                  border:'1px solid var(--acc)',borderRadius:5,padding:'4px 10px'}},'\uD83D\uDCC8 \u00C5pne i TradingView'),
-        aksje.avgVol!=null?h('span',{style:{fontSize:11,color:'var(--txt4)'}},'Avg.vol '+(aksje.avgVol/1000).toFixed(0)+'k'):null
-      )
-    )
-  ));
+        aksje.avgVol!=null?h('span',{style:{fontSize:11,color:'var(--txt4)'}},'Avg.vol '+(aksje.avgVol/1000).toFixed(0)+'k'):null)
+    )));
   return h(React.Fragment,null,...rows);
 }
 
+// ─── Hoved-App ────────────────────────────────────────────────────────────────
 function App(){
   const [dark,setDark]=useState(()=>LS.get('dark',true));
   const [activeTab,setActiveTab]=useState('screener');
@@ -389,84 +601,41 @@ function App(){
       const json=await res.json();
       const rows=parseRows(Array.isArray(json)?json:[]);
       if(!rows.length)throw new Error('Ingen data returnert');
-      setAllData(prev=>{
-        const updated={...prev,[borsId]:rows};
-        LS.set('cached_data',updated);
-        return updated;
-      });
+      setAllData(prev=>{const u={...prev,[borsId]:rows};LS.set('cached_data',u);return u;});
       if(!stille)setOk('\u2713 '+rows.length+' aksjer lastet fra '+borsId+' \u00B7 '+new Date().toLocaleTimeString('nb-NO'));
     }catch(e){if(!stille)setError(borsId+': '+e.message);}
     setLoadingBors(null);if(!stille)setLoading(false);
   };
 
   const lastAlle=()=>EXCHANGES.forEach(ex=>{const u=LS.get('webapp_urls',{})[ex.id];if(u)doLoad(ex.id,u,false);});
-  const saveUrls=()=>{LS.set('webapp_urls',urls);setOk('\u2713 URLer lagret \u2014 laster automatisk ved neste \u00E5pning');};
+  const saveUrls=()=>{LS.set('webapp_urls',urls);setOk('\u2713 URLer lagret');};
 
-  // ─── visBors: kombinerer alle borser og dedupliserer ────────────────────────
   const visBors=useMemo(()=>{
     let arr;
     if(aktivBors==='ALLE'){
-      arr=EXCHANGES.flatMap(ex=>{
-        return(allData[ex.id]||[]).map(a=>({...a,_exchange:ex.id,_tvPrefix:ex.tv}));
-      });
+      arr=EXCHANGES.flatMap(ex=>(allData[ex.id]||[]).map(a=>({...a,_exchange:ex.id,_tvPrefix:ex.tv})));
     } else {
       const ex=EXCHANGES.find(e=>e.id===aktivBors);
       arr=(allData[aktivBors]||[]).map(a=>({...a,_exchange:aktivBors,_tvPrefix:ex?ex.tv:'OSLO'}));
     }
-    // Dedupliser: samme ticker+bors skal aldri forekomme to ganger
     const seen=new Set();
-    return arr.filter(a=>{
-      const k=a.ticker+'|'+a._exchange;
-      if(seen.has(k))return false;
-      seen.add(k);return true;
-    });
+    return arr.filter(a=>{const k=a.ticker+'|'+a._exchange;if(seen.has(k))return false;seen.add(k);return true;});
   },[allData,aktivBors]);
 
-  // Nullstill apnet rad nar sortering/filter endres
   useEffect(()=>{setOpenTicker(null);},[sortBy,aktivBors,minScore]);
 
-  // ─── filtered: filtrerer og sorterer med eksplisitte primær/sekundær/tertiær ─
   const filtered=useMemo(()=>{
-    // Eksplisitte null-sjekker (ikke ||0) slik at RS=0 og VCP=0 behandles korrekt
     const rsVal=(x)=>x.rsScore!=null?x.rsScore:0;
     const vcpVal=(x)=>x.vcpScore!=null?x.vcpScore:-1;
-
     const cmp=(a,b)=>{
       let d;
-      if(sortBy==='total'){
-        d=b.total-a.total;          if(d!==0)return d;  // primar:   Total ned
-        d=rsVal(b)-rsVal(a);        if(d!==0)return d;  // sekundar: RS ned
-        return vcpVal(b)-vcpVal(a);                      // tertiar:  VCP ned
-      }
-      if(sortBy==='tt'){
-        d=b.ttScore-a.ttScore;      if(d!==0)return d;  // primar:   TT ned
-        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
-        return rsVal(b)-rsVal(a);                        // tertiar:  RS ned
-      }
-      if(sortBy==='rs'){
-        d=rsVal(b)-rsVal(a);        if(d!==0)return d;  // primar:   RS ned
-        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
-        return vcpVal(b)-vcpVal(a);                      // tertiar:  VCP ned
-      }
-      if(sortBy==='fund'){
-        d=b.fundScore-a.fundScore;  if(d!==0)return d;  // primar:   Fund ned
-        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
-        return rsVal(b)-rsVal(a);                        // tertiar:  RS ned
-      }
-      if(sortBy==='vcp'){
-        const av=vcpVal(a),bv=vcpVal(b);
-        // Aksjer uten VCP-score legges bakerst
-        if(av===-1&&bv===-1)return rsVal(b)-rsVal(a);
-        if(av===-1)return 1;
-        if(bv===-1)return -1;
-        d=bv-av;                    if(d!==0)return d;  // primar:   VCP ned
-        d=b.total-a.total;          if(d!==0)return d;  // sekundar: Total ned
-        return rsVal(b)-rsVal(a);                        // tertiar:  RS ned
-      }
+      if(sortBy==='total'){d=b.total-a.total;if(d!==0)return d;d=rsVal(b)-rsVal(a);if(d!==0)return d;return vcpVal(b)-vcpVal(a);}
+      if(sortBy==='tt'){d=b.ttScore-a.ttScore;if(d!==0)return d;d=b.total-a.total;if(d!==0)return d;return rsVal(b)-rsVal(a);}
+      if(sortBy==='rs'){d=rsVal(b)-rsVal(a);if(d!==0)return d;d=b.total-a.total;if(d!==0)return d;return vcpVal(b)-vcpVal(a);}
+      if(sortBy==='fund'){d=b.fundScore-a.fundScore;if(d!==0)return d;d=b.total-a.total;if(d!==0)return d;return rsVal(b)-rsVal(a);}
+      if(sortBy==='vcp'){const av=vcpVal(a),bv=vcpVal(b);if(av===-1&&bv===-1)return rsVal(b)-rsVal(a);if(av===-1)return 1;if(bv===-1)return -1;d=bv-av;if(d!==0)return d;d=b.total-a.total;if(d!==0)return d;return rsVal(b)-rsVal(a);}
       return a.ticker.localeCompare(b.ticker);
     };
-
-    // Spread til ny array FOR sort — forhindrer at visBors-referansen muteres
     return [...visBors].filter(a=>a.total>=minScore).sort(cmp);
   },[visBors,minScore,sortBy]);
 
@@ -474,8 +643,7 @@ function App(){
     const txt=filtered.map(a=>{
       const ex=EXCHANGES.find(e=>e.id===a._exchange)||EXCHANGES[0];
       const sym=a.ticker.replace(ex.suffix,'');
-      const tvSym=a._exchange==='OSL'?sym:sym.replace(/-/g,'_');
-      return ex.tv+':'+tvSym;
+      return ex.tv+':'+(a._exchange==='OSL'?sym:sym.replace(/-/g,'_'));
     }).join('\n');
     const el=document.createElement('a');
     el.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
@@ -484,7 +652,6 @@ function App(){
 
   const loaded=EXCHANGES.some(ex=>(allData[ex.id]||[]).length>0);
   const topCount=visBors.filter(a=>a.total>=10).length;
-
   const tb=(id,lbl)=>h('button',{className:'tab'+(activeTab===id?' active':''),onClick:()=>setActiveTab(id)},lbl);
   const cb=(val,lbl,set,cur)=>h('button',{className:'ctrl-btn'+(cur===val?' on':''),onClick:()=>set(val)},lbl);
 
@@ -492,31 +659,19 @@ function App(){
     h('div',{className:'hdr'},
       h('div',null,
         h('div',{className:'hdr-sub'},'NORDEN \u2014 MINERVINI SCREENER'),
-        h('div',{className:'hdr-title'},'Minervini Screener')
-      ),
+        h('div',{className:'hdr-title'},'Minervini Screener')),
       h('div',{style:{marginLeft:'auto',display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}},
         loaded&&h(React.Fragment,null,
-          h('div',{style:{textAlign:'right'}},
-            h('div',{style:{fontSize:20,fontWeight:700,color:'#22c55e'}},topCount),
-            h('div',{style:{fontSize:9,color:'var(--txt4)'}},'score \u2265 10')
-          ),
-          h('div',{style:{textAlign:'right'}},
-            h('div',{style:{fontSize:20,fontWeight:700,color:'var(--txt2)'}},visBors.length),
-            h('div',{style:{fontSize:9,color:'var(--txt4)'}},aktivBors==='ALLE'?'norden totalt':'totalt')
-          )
-        ),
-        h('button',{style:{background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:20,
-          padding:'5px 12px',cursor:'pointer',color:'var(--txt2)',fontSize:15},onClick:()=>setDark(!dark)},dark?'\u2600\uFE0F':'\uD83C\uDF19')
-      )
-    ),
+          h('div',{style:{textAlign:'right'}},h('div',{style:{fontSize:20,fontWeight:700,color:'#22c55e'}},topCount),h('div',{style:{fontSize:9,color:'var(--txt4)'}},'score \u2265 10')),
+          h('div',{style:{textAlign:'right'}},h('div',{style:{fontSize:20,fontWeight:700,color:'var(--txt2)'}},visBors.length),h('div',{style:{fontSize:9,color:'var(--txt4)'}},aktivBors==='ALLE'?'norden totalt':'totalt'))),
+        h('button',{style:{background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:20,padding:'5px 12px',cursor:'pointer',color:'var(--txt2)',fontSize:15},onClick:()=>setDark(!dark)},dark?'\u2600\uFE0F':'\uD83C\uDF19'))),
 
     h('div',{className:'main'},
       h('div',{className:'tab-bar'},
         tb('screener','\uD83D\uDCCA Screener'),
         tb('innstillinger','\u2699\uFE0F Innstillinger'),
         tb('posisjoner','\uD83D\uDCBC Posisjoner'),
-        tb('ordliste','\uD83D\uDCD6 Ordliste')
-      ),
+        tb('ordliste','\uD83D\uDCD6 Ordliste')),
 
       activeTab==='screener'&&h('div',null,
         !loaded&&h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
@@ -524,71 +679,42 @@ function App(){
           loadingBors?h('div',{style:{fontSize:13,color:'var(--txt3)'}},'Laster '+loadingBors+'\u2026'):
           h('div',null,
             h('div',{style:{fontSize:13,marginBottom:6}},'Konfigurer Web App URLer under '),
-            h('span',{style:{color:'var(--acc)',cursor:'pointer',textDecoration:'underline'},
-              onClick:()=>setActiveTab('innstillinger')},'\u2699\uFE0F Innstillinger')
-          )
-        ),
+            h('span',{style:{color:'var(--acc)',cursor:'pointer',textDecoration:'underline'},onClick:()=>setActiveTab('innstillinger')},'\u2699\uFE0F Innstillinger'))),
         loaded&&h('div',null,
           error&&h('div',{className:'err'},'\u26A0 '+error),
           ok&&h('div',{className:'ok'},ok),
           h('div',{className:'bors-bar'},
             h('span',{style:{fontSize:11,color:'var(--txt3)'}},'B\u00F8rs:'),
             h('button',{className:'ctrl-btn'+(aktivBors==='ALLE'?' on':''),onClick:()=>setAktivBors('ALLE')},'\uD83C\uDF10 Alle'),
-            ...EXCHANGES.map(ex=>{
-              const count=(allData[ex.id]||[]).length;
-              return h('button',{key:ex.id,
-                className:'ctrl-btn'+(aktivBors===ex.id?' on':''),
-                onClick:()=>setAktivBors(ex.id),
-                style:{opacity:count>0?1:0.4}},
-                ex.flag+' '+ex.navn+(count?' ('+count+')':'')
-              );
-            }),
-            h('button',{className:'btn-ghost',onClick:lastAlle,style:{marginLeft:'auto'}},
-              loadingBors?'\u23F3 '+loadingBors+'\u2026':'\uD83D\uDD04 Oppdater alle')
-          ),
+            ...EXCHANGES.map(ex=>{const count=(allData[ex.id]||[]).length;return h('button',{key:ex.id,className:'ctrl-btn'+(aktivBors===ex.id?' on':''),onClick:()=>setAktivBors(ex.id),style:{opacity:count>0?1:0.4}},ex.flag+' '+ex.navn+(count?' ('+count+')':''));}),
+            h('button',{className:'btn-ghost',onClick:lastAlle,style:{marginLeft:'auto'}},loadingBors?'\u23F3 '+loadingBors+'\u2026':'\uD83D\uDD04 Oppdater alle')),
           h('div',{style:{display:'flex',gap:7,alignItems:'center',marginBottom:12,flexWrap:'wrap'}},
             h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Min score:'),
             ...[5,7,9,10,11].map(s=>cb(s,s+'+',setMinScore,minScore)),
             h('div',{style:{marginLeft:'auto',display:'flex',gap:6,alignItems:'center',flexWrap:'wrap'}},
               h('span',{style:{fontSize:11,color:'var(--txt3)'}},'Sorter:'),
-              cb('total','Total',setSortBy,sortBy),cb('tt','TT',setSortBy,sortBy),
-              cb('rs','RS',setSortBy,sortBy),cb('fund','Fund',setSortBy,sortBy),
-              cb('vcp','VCP',setSortBy,sortBy),
-              h('button',{className:'btn-green',onClick:exportTV},'\u2193 TradingView')
-            )
-          ),
+              cb('total','Total',setSortBy,sortBy),cb('tt','TT',setSortBy,sortBy),cb('rs','RS',setSortBy,sortBy),cb('fund','Fund',setSortBy,sortBy),cb('vcp','VCP',setSortBy,sortBy),
+              h('button',{className:'btn-green',onClick:exportTV},'\u2193 TradingView'))),
           h('div',{style:{fontSize:11,color:'var(--txt4)',marginBottom:10}},filtered.length+' aksjer \u00B7 Klikk rad for detaljer'),
           h('div',{style:{overflowX:'auto'}},
             h('table',null,
-              h('thead',null,h('tr',null,
-                ['#','Aksje','Kurs','TT','RS','SEPA','Score','VCP',''].map(x=>h('th',{key:x,className:x==='Kurs'?'r':x==="#"?'':'c'},x))
-              )),
-              h('tbody',null,filtered.map((a,i)=>h(Rad,{
-                key:a.ticker+'|'+a._exchange,
-                aksje:a,rank:i+1,onKalk:setKalkAksje,
-                tvPrefix:a._tvPrefix||'OSLO',openTicker,setOpenTicker
-              })))
-            )
-          ),
+              h('thead',null,h('tr',null,['#','Aksje','Kurs','TT','RS','SEPA','Score','VCP',''].map(x=>h('th',{key:x,className:x==='Kurs'?'r':x==="#"?'':'c'},x)))),
+              h('tbody',null,filtered.map((a,i)=>h(Rad,{key:a.ticker+'|'+a._exchange,aksje:a,rank:i+1,onKalk:setKalkAksje,tvPrefix:a._tvPrefix||'OSLO',openTicker,setOpenTicker}))))),
           filtered.length===0&&h('div',{style:{textAlign:'center',padding:30,color:'var(--txt4)'}},'Ingen aksjer med score \u2265 '+minScore),
           h('div',{className:'guide-grid'},
             [['1. Velg kandidat','Score \u2265 10, RS \u2265 70. Let etter VCP-m\u00F8nster i TradingView.'],
              ['2. Entry','Breakout over pivot p\u00E5 40-50% over gj.snittlig volum.'],
-             ['3. Posisjonsst\u00F8rrelse','Maks 1-2% risiko per trade. Bruk Kalk-knappen.'],
+             ['3. Posisjonst\u00F8rrelse','Maks 1-2% risiko per trade. Bruk Kalk-knappen.'],
              ['4. Stop-loss','7-8% under inngang. Flytt aldri ned.'],
              ['5. Target','Min 3:1. Ta delvis ved 2:1, la resten l\u00F8pe.'],
              ['6. Exit','Brudd under stigende MA50 eller distribusjon.'],
-            ].map(([t,k])=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},k)))
-          )
-        )
-      ),
+            ].map(([t,k])=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},k)))))),
 
       activeTab==='innstillinger'&&h('div',{style:{maxWidth:700}},
         h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Web App URLer per b\u00F8rs'),
         h('div',{className:'info-box'},
           h('strong',{style:{color:'var(--txt2)'}},'Legg til doGet() i hvert Apps Script og deploy som Web App (Alle kan se):'),
-          h('pre',{style:{background:'var(--bg3)',border:'1px solid var(--bdr)',borderRadius:6,
-            padding:12,fontSize:11,color:'var(--acc)',overflowX:'auto',margin:'8px 0',lineHeight:1.7,whiteSpace:'pre'}},
+          h('pre',{style:{background:'var(--bg3)',border:'1px solid var(--bdr)',borderRadius:6,padding:12,fontSize:11,color:'var(--acc)',overflowX:'auto',margin:'8px 0',lineHeight:1.7,whiteSpace:'pre'}},
 `function doGet() {
   const ds = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Data");
   if (!ds) return ContentService.createTextOutput("[]")
@@ -600,38 +726,25 @@ function App(){
   });
   return ContentService.createTextOutput(JSON.stringify(rows))
     .setMimeType(ContentService.MimeType.JSON);
-}`)
-        ),
+}`)),
         EXCHANGES.map(ex=>h('div',{key:ex.id,style:{marginBottom:14}},
           h('div',{className:'field-lbl'},ex.flag+' '+ex.navn+' ('+ex.id+') \u2014 Web App URL'),
           h('div',{style:{display:'flex',gap:8}},
-            h('input',{type:'url',value:urls[ex.id]||'',
-              onChange:e=>setUrls({...urls,[ex.id]:e.target.value}),
-              placeholder:'https://script.google.com/macros/s/\u2026/exec',style:{flex:1}}),
-            h('button',{className:'btn-ghost',disabled:!urls[ex.id],
-              onClick:()=>doLoad(ex.id,urls[ex.id])},loadingBors===ex.id?'Laster\u2026':'Test')
-          ),
-          (allData[ex.id]||[]).length>0&&h('div',{style:{fontSize:11,color:'#22c55e',marginTop:3}},
-            '\u2713 '+(allData[ex.id]||[]).length+' aksjer cachet')
-        )),
+            h('input',{type:'url',value:urls[ex.id]||'',onChange:e=>setUrls({...urls,[ex.id]:e.target.value}),placeholder:'https://script.google.com/macros/s/\u2026/exec',style:{flex:1}}),
+            h('button',{className:'btn-ghost',disabled:!urls[ex.id],onClick:()=>doLoad(ex.id,urls[ex.id])},loadingBors===ex.id?'Laster\u2026':'Test')),
+          (allData[ex.id]||[]).length>0&&h('div',{style:{fontSize:11,color:'#22c55e',marginTop:3}},'\u2713 '+(allData[ex.id]||[]).length+' aksjer cachet'))),
         error&&h('div',{className:'err'},'\u26A0 '+error),
         ok&&h('div',{className:'ok'},ok),
-        h('button',{className:'btn',onClick:()=>{saveUrls();lastAlle();}},loading?'Laster\u2026':'Lagre og oppdater alle')
-      ),
+        h('button',{className:'btn',onClick:()=>{saveUrls();lastAlle();}},loading?'Laster\u2026':'Lagre og oppdater alle')),
 
       activeTab==='posisjoner'&&h(Posisjoner,null),
 
       activeTab==='ordliste'&&h('div',null,
         h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Minervini-ordliste'),
         h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:12}},
-          GLOSS.map(({t,c})=>h('div',{key:t,className:'guide-card'},
-            h('div',{className:'g-title'},t),h('div',{className:'g-text'},c)))
-        )
-      )
-    ),
+          GLOSS.map(({t,c})=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},c)))))),
 
-    kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjopt:()=>setActiveTab('posisjoner')})
-  );
+    kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjopt:()=>setActiveTab('posisjoner')})));
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(h(App,null));
