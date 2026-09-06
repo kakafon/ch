@@ -142,6 +142,27 @@ const SMC_GLOSS=[
   ]},
 ];
 
+const STRATEGI_STEG=[
+  {n:'1',t:'Kandidatuttak (screener)',c:'Score \u2265 9 (helst \u2265 10), RS \u2265 70. G\u00E5 deretter inn i VCP-indikatoren og sjekk MANUELT at siste kontraksjon fortsatt er aktiv \u2014 forkast kandidaten hvis prisen allerede er over toppen av siste registrerte kontraksjon, eller hvis indikatoren viser en "kontraksjon" som egentlig er et st\u00F8rre nedtrekk enn fasen f\u00F8r (se kjente svakheter under).'},
+  {n:'2',t:'Vent p\u00E5 SMC-bekreftelse mot kontraksjonsbunnen',c:'S\u00F8k etter: (a) et kort likviditetssveip under kontraksjonens lavpunkt (stikk under, rask retur \u2014 IKKE et reelt brudd), etterfulgt av (b) en CHoCH p\u00E5 entry-tidsrammen. Dette er det tidlige varselet om at nedsiden er utt\u00F8mt f\u00F8r prisen faktisk snur.'},
+  {n:'3',t:'Entry',c:'F\u00F8rstevalg: retest av order block/FVG som dannes i CHoCH-bevegelsen. Hvis ingen retest kommer og BOS bekrefter videre oppgang (som i BOS-eksempelet ditt p\u00E5 Hunter Group), aksepter en litt d\u00E5rligere pris og g\u00E5 inn p\u00E5 BOS-bruddet i stedet for \u00E5 vente for lenge.'},
+  {n:'4',t:'Stop',c:'Rett under likviditetssveipets lavpunkt / order blocket \u2014 IKKE en fast 7-8%-regel. I praksis blir dette ofte trangere, som gir bedre R/R og mindre kapital bundet per trade.'},
+  {n:'5',t:'Delvis gevinst',c:'Ta ~50% av posisjonen ved neste \u00E5penbare likviditetsniv\u00E5 over inng\u00E5ende trend (Weak High / EQH). Dette er typisk et 1:1 til 2:1-niv\u00E5, ikke 3-4:1 \u2014 poenget er \u00E5 materialisere profitt oftere.'},
+  {n:'6',t:'Full exit p\u00E5 resten',c:'Ikke vent p\u00E5 fast target eller fast stop for restposisjonen. Lukk n\u00E5r du f\u00E5r en bearish CHoCH mot posisjonen p\u00E5 entry-tidsrammen \u2014 det er nettopp dette som skal hindre "satt igjennom hele reverseringen p\u00E5 vei til stop"-scenarioet fra tidligere.'},
+];
+
+const STRATEGI_FALLGRUVER=[
+  {t:'VCP-indikator: teller videre etter utbrudd',c:'Observert svakhet: indikatoren fortsetter \u00E5 registrere nye "kontraksjoner" etter at kursen allerede har brutt ut av m\u00F8nsteret. Manuell regel inntil dette er rettet i koden: hvis kursen st\u00E5r over toppen av siste kontraksjon markert av indikatoren, se bort fra videre kontraksjonstelling \u2014 m\u00F8nsteret er avsluttet, uansett hva indikatoren fortsatt viser.'},
+  {t:'VCP-indikator: godtar for stort nedtrekk som kontraksjon',c:'En ekte VCP skal ha SYNKENDE dybde per fase. Hvis en "ny" kontraksjon er dypere enn foreg\u00E5ende (eller dypere enn en fornuftig \u00F8vre grense, f.eks. \u226515-20% for en tidlig fase), er det sannsynligvis et strukturbrudd \u2014 ikke en gyldig kontraksjon. Behandle den som ugyldig manuelt til logikken er strammet inn i Pine-koden.'},
+  {t:'Neste steg p\u00E5 dette punktet',c:'N\u00E5r du har Pine-koden for VCP-indikatoren tilgjengelig (ikke n\u00F8dvendig p\u00E5 mobil n\u00E5), kan vi g\u00E5 gjennom kontraksjons- og reset-logikken sammen og forsl\u00E5 konkrete rettelser.'},
+];
+
+const STRATEGI_LOGG=[
+  'Ticker og dato for entry/exit','Screener-score og RS ved entry','Kontraksjonsdybde (%) ved entry',
+  'Niv\u00E5 for likviditetssveip / CHoCH-tidsramme brukt','Stop-niv\u00E5 og faktisk risiko (kr)',
+  'Niv\u00E5 og andel solgt ved delvis gevinst','\u00C5rsak til full exit (CHoCH / stop)','Oppn\u00E5dd R-multippel',
+];
+
 function parseRows(rows){
   return rows.map(r=>{
     const n=k=>{const v=parseFloat(String(r[k]||'').replace(/\u26A0/g,'').trim());return isNaN(v)?null:v;};
@@ -705,7 +726,8 @@ function App(){
         tb('innstillinger','\u2699\uFE0F Innstillinger'),
         tb('posisjoner','\uD83D\uDCBC Posisjoner'),
         tb('ordliste','\uD83D\uDCD6 Ordliste'),
-        tb('smc','\uD83E\uDDE0 SMC-ordliste')),
+        tb('smc','\uD83E\uDDE0 SMC-ordliste'),
+        tb('strategi','\uD83C\uDFAF Strategi')),
 
       activeTab==='screener'&&h('div',null,
         !loaded&&h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
@@ -786,6 +808,27 @@ function App(){
           h('div',{className:'sec-lbl',style:{marginBottom:10,fontSize:10}},g),
           h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:12}},
             items.map(({t,c})=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},c))))))),
+
+      activeTab==='strategi'&&h('div',{style:{maxWidth:820}},
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:4}},'Strategi \u2014 SMC-basert VCP-rotasjon'),
+        h('div',{style:{fontSize:11,color:'var(--txt3)',marginBottom:20,lineHeight:1.7}},
+          'M\u00E5l: bytte fra \u00E5 jage store, langsomme gevinster til hyppigere trades med strukturbasert exit. Screeneren brukes som univers-filter (kvalitetsselskaper i trend); SMC-signaler styrer n\u00E5r du faktisk g\u00E5r inn og ut. Status: under utpr\u00F8ving \u2014 juster reglene etter hvert som du tester.'),
+        h('div',{className:'sec-lbl',style:{marginBottom:10,fontSize:10}},'Steg for steg'),
+        h('div',{style:{display:'flex',flexDirection:'column',gap:10,marginBottom:24}},
+          STRATEGI_STEG.map(({n,t,c})=>h('div',{key:n,className:'guide-card',style:{display:'flex',gap:12,alignItems:'flex-start'}},
+            h('div',{style:{minWidth:26,height:26,borderRadius:'50%',background:'var(--acc-bg)',border:'1px solid var(--acc)',
+                     color:'var(--acc)',fontSize:12,fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}},n),
+            h('div',null,h('div',{className:'g-title',style:{marginBottom:3}},t),h('div',{className:'g-text'},c))))),
+        h('div',{className:'sec-lbl',style:{marginBottom:10,fontSize:10}},'Kjente svakheter \u00E5 f\u00F8lge med p\u00E5 (VCP-indikator)'),
+        h('div',{style:{display:'flex',flexDirection:'column',gap:10,marginBottom:24}},
+          STRATEGI_FALLGRUVER.map(({t,c})=>h('div',{key:t,className:'guide-card',
+            style:{borderColor:'rgba(239,68,68,.3)',background:'rgba(239,68,68,.04)'}},
+            h('div',{className:'g-title',style:{color:'#f87171',marginBottom:3}},t),h('div',{className:'g-text'},c)))),
+        h('div',{className:'sec-lbl',style:{marginBottom:10,fontSize:10}},'Logg per trade (for evaluering senere)'),
+        h('div',{className:'guide-card'},
+          h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'6px 16px'}},
+            STRATEGI_LOGG.map(item=>h('div',{key:item,style:{fontSize:11,color:'var(--txt3)',display:'flex',gap:6,alignItems:'flex-start'}},
+              h('span',{style:{color:'var(--acc)'}},'\u2022'),item))))),
 
     kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjopt:()=>setActiveTab('posisjoner')}));
 }
