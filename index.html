@@ -110,6 +110,38 @@ const GLOSS=[
   {t:'Trailing Stop',c:'Etter 20-25% oppgang: flytt stop til breakeven. Etter 30%+: bruk MA50 som trailing stop. La vinnerne l\u00F8pe til teknisk brudd. Ikke selg for tidlig p.g.a. frykt \u2014 det er den vanligste feilen.'},
 ];
 
+const SMC_GLOSS=[
+  {g:'Struktur',items:[
+    {t:'Market Structure',c:'Den overordnede retningen markedet beveger seg i, lest ut fra rekkef\u00F8lgen av swing-topper og swing-bunner. Stigende struktur = h\u00F8yere topper og h\u00F8yere bunner (HH/HL). Fallende struktur = lavere topper og lavere bunner (LH/LL).'},
+    {t:'Swing High / Swing Low',c:'Et lokalt topp- eller bunnpunkt p\u00E5 kursgrafen, definert av at kursen snur retning rundt punktet. Grunnbyggesteinen i all strukturanalyse \u2014 BOS og CHoCH m\u00E5les alltid mot forrige swing-punkt.'},
+    {t:'BOS \u2014 Break of Structure',c:'Kursen bryter gjennom forrige swing-punkt I SAMME RETNING som trenden. Bekrefter at trenden fortsetter. I en oppgang: brudd over forrige swing high. I en nedgang: brudd under forrige swing low.'},
+    {t:'CHoCH \u2014 Change of Character',c:'Det f\u00F8rste tegnet p\u00E5 at trenden kan v\u00E6re i ferd med \u00E5 snu. Kursen bryter gjennom et swing-punkt MOT den etablerte trenden \u2014 f.eks. bryter under siste highere low i en oppgang. Dette er ofte det tidligste varselet om en topp eller bunn, og n\u00F8kkelsignalet man leter etter n\u00E5r man skal time reverseringer.'},
+    {t:'Internal Structure vs. Swing Structure',c:'Lux Algo (og SMC generelt) skiller mellom "swing"-struktur (de store, \u00E5penbare topp/bunn-punktene p\u00E5 grafen) og "internal"-struktur (mindre svingninger inni en st\u00F8rre bevegelse, sett p\u00E5 lavere tidsramme). Internal BOS/CHoCH gir tidligere, men mer st\u00F8yete signaler enn swing BOS/CHoCH.'},
+    {t:'Strong High / Strong Low',c:'Et swing-punkt som IKKE er tatt ut igjen \u2014 markedet har respektert niv\u00E5et. Regnes som et p\u00E5litelig m\u00E5l for fremtidig likviditet fordi det trolig fortsatt ligger stop-ordre/likviditet der.'},
+    {t:'Weak High / Weak Low',c:'Et swing-punkt som allerede er tatt ut (sveipet), altså et niv\u00E5 markedet har "renset". Mindre interessant som m\u00E5l fremover fordi likviditeten der trolig allerede er hentet.'},
+  ]},
+  {g:'Likviditet',items:[
+    {t:'Liquidity (BSL / SSL)',c:'Buy-Side Liquidity (BSL) er stop-loss-ordre fra shortere som ligger over tidligere topper. Sell-Side Liquidity (SSL) er stop-loss fra long-posisjoner som ligger under tidligere bunner. Store aktører trenger denne likviditeten for \u00E5 fylle store ordre, og priser trekkes derfor ofte MOT disse niv\u00E5ene f\u00F8r reell reversering.'},
+    {t:'Liquidity Sweep / Stop Hunt',c:'Kursen stikker kortvarig gjennom et \u00E5penbart niv\u00E5 (f.eks. en tidligere bunn) for \u00E5 utl\u00F8se stop-ordre, f\u00F8r den reverserer tilbake i motsatt retning. Klassisk SMC-signal for \u00E5 identifisere en falsk bevegelse f\u00F8r ekte reversering \u2014 sentralt for \u00E5 finne bunner/topper.'},
+    {t:'Equal Highs / Equal Lows (EQH / EQL)',c:'To eller flere topper (EQH) eller bunner (EQL) p\u00E5 tilnærmet samme niv\u00E5. Dette bygger opp en tydelig likviditetspool som markedet ofte er tiltrukket av \u00E5 sveipe f\u00F8r en st\u00F8rre bevegelse.'},
+    {t:'Inducement (IDM)',c:'Et mindre, "lokkende" swing-punkt plassert mellom entry og et st\u00F8rre likviditetsniv\u00E5, designet for \u00E5 lure tidlige tradere inn i posisjon f\u00F8r den egentlige bevegelsen skjer. Sveip av inducement bekrefter ofte at et order block er gyldig.'},
+  ]},
+  {g:'Soner / Points of Interest',items:[
+    {t:'Order Block (OB)',c:'Det siste motsatte candle-settet f\u00F8r en kraftig, retningsbestemt bevegelse (displacement). Bullish OB = siste r\u00F8de candle f\u00F8r stort opptrekk. Bearish OB = siste gr\u00F8nne candle f\u00F8r stort fall. Tolkes som stedet hvor institusjoner \u00E5pnet posisjoner, og brukes som entry-sone n\u00E5r kursen kommer tilbake ("mitigation").'},
+    {t:'Breaker Block',c:'Et order block som har feilet \u2014 kursen brøt gjennom det \u2014 og deretter snudde rollen sin: en tidligere bearish OB som blir brutt og retestet nedenfra fungerer som ny support (og omvendt). Sees som et sterkere signal enn et vanlig OB fordi det bekrefter en strukturell endring.'},
+    {t:'Fair Value Gap (FVG) / Imbalance',c:'Et "hull" i prisstrukturen der kursen beveget seg s\u00E5 raskt at det ikke ble reell to-veis handel \u2014 vises som gapet mellom candle 1 sin høy/lav og candle 3 sin lav/høy, med candle 2 (den store) i midten. Markedet har en tendens til \u00E5 "fylle" (mitigere) disse gapene senere, og de brukes ofte som entry- eller m\u00E5lsoner.'},
+    {t:'Mitigation',c:'Når kursen returnerer til et order block eller en FVG og "fyller" eller reagerer p\u00E5 sonen. Et OB/FVG regnes som mitigert n\u00E5r prisen har handlet gjennom det \u2014 etter det kan sonen miste sin gyldighet som fremtidig entry.'},
+    {t:'Supply Zone / Demand Zone',c:'Bredere soner (ofte flere candles) hvor tilbud eller etterspørsel tidligere har overveldet markedet og snudd prisen. Overlapper konseptuelt med order blocks, men er gjerne bredere og mindre presise \u2014 nyttige som kontekst rundt et OB.'},
+    {t:'Point of Interest (POI)',c:'Samlebetegnelse for et hvilket som helst niv\u00E5 SMC-traderen vurderer som viktig for en fremtidig reaksjon: order block, FVG, breaker, liquidity pool osv. Når flere POI-er faller sammen (confluence) styrkes signalet.'},
+  ]},
+  {g:'Retning & momentum',items:[
+    {t:'Displacement',c:'En kraftig, ofte impulsiv candle-sekvens med stor kropp og lite veker, som beveger kursen raskt i én retning. Displacement er ofte det som skaper FVG-er, og signaliserer at større aktører er aktivt inne i markedet \u2014 gjerne umiddelbart etter en liquidity sweep.'},
+    {t:'Premium / Discount / Equilibrium',c:'Man deler en identifisert kursrange (f.eks. mellom siste swing high og swing low) i to via 50%-niv\u00E5et (equilibrium). Øvre halvdel = premium (dyrt \u2014 gunstig sone for shortentry). Nedre halvdel = discount (billig \u2014 gunstig sone for longentry). Brukes for \u00E5 vurdere om en entry skjer p\u00E5 en fornuftig pris i konteksten.'},
+    {t:'HTF / LTF (Higher / Lower Timeframe)',c:'Multi-tidsramme-analyse: identifiser bias og n\u00F8kkelsoner (OB, FVG, likviditet) p\u00E5 en høyere tidsramme (f.eks. daglig/4H), og tim inngangen presist p\u00E5 en lavere tidsramme (f.eks. 15m/5m) ved \u00E5 se etter CHoCH der.'},
+    {t:'Smart Money',c:'Betegnelsen SMC-metodikken bruker p\u00E5 store, informerte markedsaktører (banker, institusjoner, market makers) hvis ordreflyt antas \u00E5 drive de store bevegelsene. M\u00E5let med SMC er \u00E5 lese sporene disse aktørene etterlater seg (likviditetssveip, order blocks, displacement) i stedet for \u00E5 handle p\u00E5 klassiske indikatorer alene.'},
+  ]},
+];
+
 function parseRows(rows){
   return rows.map(r=>{
     const n=k=>{const v=parseFloat(String(r[k]||'').replace(/\u26A0/g,'').trim());return isNaN(v)?null:v;};
@@ -672,7 +704,8 @@ function App(){
         tb('screener','\uD83D\uDCCA Screener'),
         tb('innstillinger','\u2699\uFE0F Innstillinger'),
         tb('posisjoner','\uD83D\uDCBC Posisjoner'),
-        tb('ordliste','\uD83D\uDCD6 Ordliste')),
+        tb('ordliste','\uD83D\uDCD6 Ordliste'),
+        tb('smc','\uD83E\uDDE0 SMC-ordliste')),
 
       activeTab==='screener'&&h('div',null,
         !loaded&&h('div',{style:{textAlign:'center',padding:40,color:'var(--txt4)'}},
@@ -744,6 +777,15 @@ function App(){
         h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Minervini-ordliste'),
         h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:12}},
           GLOSS.map(({t,c})=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},c)))))),
+
+      activeTab==='smc'&&h('div',null,
+        h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:4}},'Smart Money Concepts \u2014 ordliste'),
+        h('div',{style:{fontSize:11,color:'var(--txt3)',marginBottom:18,lineHeight:1.7,maxWidth:640}},
+          'Engelske begreper som brukes i SMC-indikatorer (bl.a. LuxAlgo sin "Smart Money Concepts"), med norske forklaringer. Tenkt som referanse n\u00E5r du leser signaler i TradingView og vurderer entry/exit rundt VCP-kandidater fra screeneren.'),
+        SMC_GLOSS.map(({g,items})=>h('div',{key:g,style:{marginBottom:22}},
+          h('div',{className:'sec-lbl',style:{marginBottom:10,fontSize:10}},g),
+          h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:12}},
+            items.map(({t,c})=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},c))))))),
 
     kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjopt:()=>setActiveTab('posisjoner')}));
 }
