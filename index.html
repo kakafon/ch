@@ -798,7 +798,7 @@ function App(){
       activeTab==='ordliste'&&h('div',null,
         h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:14}},'Minervini-ordliste'),
         h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:12}},
-          GLOSS.map(({t,c})=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},c)))))),
+          GLOSS.map(({t,c})=>h('div',{key:t,className:'guide-card'},h('div',{className:'g-title'},t),h('div',{className:'g-text'},c))))),
 
       activeTab==='smc'&&h('div',null,
         h('div',{style:{fontSize:14,fontWeight:700,color:'var(--txt)',marginBottom:4}},'Smart Money Concepts \u2014 ordliste'),
@@ -828,7 +828,7 @@ function App(){
         h('div',{className:'guide-card'},
           h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'6px 16px'}},
             STRATEGI_LOGG.map(item=>h('div',{key:item,style:{fontSize:11,color:'var(--txt3)',display:'flex',gap:6,alignItems:'flex-start'}},
-              h('span',{style:{color:'var(--acc)'}},'\u2022'),item))))),
+              h('span',{style:{color:'var(--acc)'}},'\u2022'),item)))))),
 
     kalkAksje&&h(Kalkulator,{aksje:kalkAksje,onClose:()=>setKalkAksje(null),onKjopt:()=>setActiveTab('posisjoner')}));
 }
